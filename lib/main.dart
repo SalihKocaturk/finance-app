@@ -1,30 +1,20 @@
-import 'package:expense_tracker/features/auth/pages/login_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 
+import 'app.dart';
+import 'core/constants/hive_constants.dart';
 import 'features/auth/models/user.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(UserAdapter()); // Otomatik üretilen adapter
-
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: MyApp()));
-}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserAdapter());
+  await Hive.openBox<User>(HiveConstants.userBoxName);
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const LoginPage(),
-    );
-  }
+  await Firebase.initializeApp();
+
+  runApp(const ProviderScope(child: App()));
 }

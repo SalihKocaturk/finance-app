@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-part 'user.g.dart'; // Bu dosya kod üretilecek
+part 'user.g.dart';
 
 @HiveType(typeId: 0)
 class User extends HiveObject {
@@ -14,14 +14,10 @@ class User extends HiveObject {
   @HiveField(2)
   final String email;
 
-  @HiveField(3)
-  final String password;
-
   User({
     String? id,
     required this.name,
     required this.email,
-    required this.password,
   }) : id = id ?? const Uuid().v4();
 
   @override
