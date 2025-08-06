@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/router/router_enum.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,9 +14,9 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {
-              authNotifier.logOut();
-              context.go('/login');
+            onPressed: () async {
+              await authNotifier.logOut();
+              context.go(RouterEnum.login.path);
             },
             icon: const Icon(Icons.logout),
           ),

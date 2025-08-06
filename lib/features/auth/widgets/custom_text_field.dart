@@ -6,15 +6,17 @@ class CustomTextField extends StatelessWidget {
     this.isPassword = false, // 🔑 Varsayılan değer
     required this.hintText,
     required this.onChanged,
+    this.initialValue,
   });
 
   final bool isPassword;
   final String hintText;
   final Function(String) onChanged;
-
+  final String? initialValue;
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      initialValue: initialValue,
       onChanged: onChanged,
       obscureText: isPassword,
       decoration: InputDecoration(

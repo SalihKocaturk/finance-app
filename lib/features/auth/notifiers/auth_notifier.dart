@@ -40,7 +40,7 @@ class AuthNotifier extends Notifier<User> {
     }
   }
 
-  void logOut() {
-    userRepository.removeUser();
+  Future<void> logOut() async {
+    await userRepository.removeUser();
   }
 }

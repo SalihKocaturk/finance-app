@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/router/router_enum.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -10,33 +11,33 @@ final routerProvider = Provider<GoRouter>((ref) {
   final hasUser = ref.watch(hasUserProvider);
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: RouterEnum.login.path,
     routes: [
       GoRoute(
-        path: '/login',
-        name: 'login',
+        path: RouterEnum.login.path,
+        name: RouterEnum.login.name,
         builder: (context, state) => const LoginPage(),
         redirect: (context, state) {
           if (hasUser.isLoading) return null;
-          return hasUser.value != null ? '/' : null;
+          return hasUser.value == true ? RouterEnum.home.path : null;
         },
       ),
       GoRoute(
-        path: '/register',
-        name: 'register',
+        path: RouterEnum.register.path,
+        name: RouterEnum.register.name,
         builder: (context, state) => const RegisterPage(),
         redirect: (context, state) {
           if (hasUser.isLoading) return null;
-          return hasUser.value != null ? '/' : null;
+          return hasUser.value != null ? RouterEnum.home.path : null;
         },
       ),
       GoRoute(
-        path: '/',
-        name: 'home',
+        path: RouterEnum.home.path,
+        name: RouterEnum.home.name,
         builder: (context, state) => const HomePage(),
         redirect: (context, state) {
           if (hasUser.isLoading) return null;
-          return hasUser.value != null ? null : '/login';
+          return hasUser.value == true ? null : RouterEnum.login.path;
         },
       ),
     ],
