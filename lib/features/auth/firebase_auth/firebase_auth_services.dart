@@ -7,7 +7,7 @@ import '../models/user.dart';
 class FirebaseAuthService {
   final firebase.FirebaseAuth _auth = firebase.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  //firebase instanseları tanımlıyorum
   Future<User?> signUpWithEmailAndPassword({
     required String email,
     required String password,
@@ -33,13 +33,11 @@ class FirebaseAuthService {
         id: mailUser?.uid,
         name: name,
         email: email,
-      );
+      ); // kendi olusturdugum modele gelen bilgileri isliyorum
       return user;
     } on firebase.FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         showToast(message: 'E-mail kullanılıyor');
-
-        //email kullanılıyor giris yapın uyarısı
       } else {
         //  hata donmeli
       }
@@ -52,6 +50,7 @@ class FirebaseAuthService {
 
   Future<User?> signInWithEmailAndPassword(String email, String password) async {
     try {
+      //user bilgileri emailden gelenler alınıyor
       firebase.UserCredential credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -63,7 +62,7 @@ class FirebaseAuthService {
         final doc = await _firestore.collection('users').doc(firebaseUser.uid).get();
 
         if (doc.exists) {
-          final data = doc.data()!;
+          final data = doc.data()!; // kendi olusturdugum modele gelen bilgileri isliyorum
           final user = User(
             id: data['uid'],
             name: data['name'],
@@ -75,9 +74,10 @@ class FirebaseAuthService {
         }
       }
     } on firebase.FirebaseAuthException catch (e) {
+      // hatalı girisleri gosterme
       if (e.code == 'user-not-found') {
         showToast(message: 'Kullanıcı bulunamadı.');
-      } else if (e.code == 'wrong-password') {
+      } else if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
         showToast(message: 'Şifre yanlış.');
       } else {
         showToast(message: 'Firebase hatası: ${e.message}');

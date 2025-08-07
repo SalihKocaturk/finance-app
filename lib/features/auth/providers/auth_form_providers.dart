@@ -1,7 +1,11 @@
 import 'package:riverpod/riverpod.dart';
 
-final nameProvider = StateProvider<String>((ref) => '');
-final emailProvider = StateProvider<String>((ref) => 'kocaturksalih8@gmail.com');
-final passwordProvider = StateProvider<String>((ref) => 'Salihbaba');
-final password2Provider = StateProvider<String>((ref) => '');
+final loginNameProvider = StateProvider<String>((ref) => '');
+final loginEmailProvider = StateProvider<String>((ref) => 'kocaturksalih8@gmail.com');
+final loginPasswordProvider = StateProvider<String>((ref) => 'Salihbab');
+final registernameProvider = StateProvider<String>((ref) => '');
+final registerEmailProvider = StateProvider<String>((ref) => 'kocaturksalih8@gmail.com');
+final registerPasswordProvider = StateProvider<String>((ref) => '');
+final registerPassword2Provider = StateProvider<String>((ref) => '');
+//isimlendirmeler duzeltilecek ve register icin ayrı ayrı yapılacak provider
 //TODO:: loginpasswordprovider olusturulacak, email provider da iki defa olcak

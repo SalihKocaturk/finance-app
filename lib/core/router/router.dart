@@ -28,7 +28,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RegisterPage(),
         redirect: (context, state) {
           if (hasUser.isLoading) return null;
-          return hasUser.value != null ? RouterEnum.home.path : null;
+          return hasUser.value == true ? RouterEnum.home.path : null;
         },
       ),
       GoRoute(

@@ -1,10 +1,10 @@
-import 'package:expense_tracker/features/auth/notifiers/auth_notifier.dart';
 import 'package:expense_tracker/features/auth/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../providers/auth_form_providers.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/custom_text_field.dart';
 
 class RegisterPage extends ConsumerWidget {
@@ -12,7 +12,8 @@ class RegisterPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final password = ref.watch(passwordProvider);
+    final password = ref.watch(registerPasswordProvider);
+    var authNotifier = ref.watch(authProvider.notifier);
 
     final hasUppercase = password.contains(RegExp(r'[A-Z]'));
     final hasLowercase = password.contains(RegExp(r'[a-z]'));
@@ -34,25 +35,25 @@ class RegisterPage extends ConsumerWidget {
             const SizedBox(height: 30),
             CustomTextField(
               hintText: "İsim",
-              isPassword: true,
-              onChanged: (val) => ref.read(nameProvider.notifier).state = val,
+              isPassword: false,
+              onChanged: (val) => ref.read(registernameProvider.notifier).state = val,
             ),
             const SizedBox(height: 16),
             CustomTextField(
               hintText: "Email",
-              onChanged: (val) => ref.read(emailProvider.notifier).state = val,
+              onChanged: (val) => ref.read(registerEmailProvider.notifier).state = val,
             ),
             const SizedBox(height: 16),
             CustomTextField(
               hintText: "Şifre",
               isPassword: true,
-              onChanged: (val) => ref.read(passwordProvider.notifier).state = val,
+              onChanged: (val) => ref.read(registerPasswordProvider.notifier).state = val,
             ),
             const SizedBox(height: 16),
             CustomTextField(
               hintText: "Yeniden Şifre",
               isPassword: true,
-              onChanged: (val) => ref.read(password2Provider.notifier).state = val,
+              onChanged: (val) => ref.read(registerPassword2Provider.notifier).state = val,
             ),
             const SizedBox(height: 12),
             _buildPasswordRules(hasUppercase, hasLowercase, hasMinLength),
@@ -61,7 +62,7 @@ class RegisterPage extends ConsumerWidget {
               width: double.infinity,
               child: CustomElevatedButton(
                 onPressed: () {
-                  AuthNotifier().register(ref);
+                  authNotifier.register(ref);
                 },
                 title: "Devam Et",
               ),

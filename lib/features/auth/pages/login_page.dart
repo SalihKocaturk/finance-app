@@ -14,16 +14,16 @@ class LoginPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var authNotifier = ref.watch(authProvider.notifier);
-    var email = ref.read(emailProvider.notifier).state;
-    var password = ref.read(passwordProvider.notifier).state;
+    var email = ref.read(loginEmailProvider.notifier).state;
+    var password = ref.read(loginPasswordProvider.notifier).state;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 50,
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 50),
             const Text(
               "Giriş Yap",
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -45,24 +45,22 @@ class LoginPage extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: CustomElevatedButton(
+                title: "Devam Et",
                 onPressed: () async {
                   await authNotifier.logIn(ref);
-                  context.go(RouterEnum.home.path);
-                  print(RouterEnum.home.path);
                 },
-                title: "Devam Et",
               ),
             ),
             const SizedBox(height: 20),
             const SizedBox(child: Divider()),
             GestureDetector(
-              onTap: () {
-                context.go(RouterEnum.register.path);
-              },
               child: const Text(
                 " Kayıt ol",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              onTap: () {
+                context.go(RouterEnum.register.path);
+              },
             ),
           ],
         ),
