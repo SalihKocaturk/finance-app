@@ -3,13 +3,30 @@ enum RouterEnum {
     '/login',
     'login',
   ),
+
+  register(
+    '/register',
+    'register',
+  ),
   home(
     '/home',
     'home',
   ),
-  register(
-    '/register',
-    'register',
+  add(
+    '/add',
+    'add',
+  ),
+  profile(
+    '/profile',
+    'profile',
+  ),
+  transaction(
+    '/transaction',
+    'transaction',
+  ),
+  base(
+    '/base',
+    'base',
   );
 
   final String path;

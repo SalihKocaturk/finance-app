@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:overlay_support/overlay_support.dart';
-
+import 'firebase_options.dart';
 import 'app.dart';
 import 'core/constants/hive_constants.dart';
 import 'features/auth/models/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await Hive.initFlutter();
   Hive.registerAdapter(UserAdapter());
   await Hive.openBox<User>(HiveConstants.userBoxName);
-
-  await Firebase.initializeApp();
 
   runApp(
     const ProviderScope(

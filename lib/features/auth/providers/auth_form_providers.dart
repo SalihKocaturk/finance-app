@@ -2,7 +2,7 @@ import 'package:riverpod/riverpod.dart';
 
 final loginNameProvider = StateProvider<String>((ref) => '');
 final loginEmailProvider = StateProvider<String>((ref) => 'kocaturksalih8@gmail.com');
-final loginPasswordProvider = StateProvider<String>((ref) => 'Salihbab');
+final loginPasswordProvider = StateProvider<String>((ref) => 'Salihbaba');
 final registernameProvider = StateProvider<String>((ref) => '');
 final registerEmailProvider = StateProvider<String>((ref) => 'kocaturksalih8@gmail.com');
 final registerPasswordProvider = StateProvider<String>((ref) => '');
