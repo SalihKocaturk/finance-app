@@ -1,7 +1,6 @@
 import 'package:expense_tracker/features/auth/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../providers/auth_form_providers.dart';
 import '../providers/auth_provider.dart';
@@ -73,7 +72,11 @@ class RegisterPage extends ConsumerWidget {
 
             GestureDetector(
               onTap: () {
-                context.go("/login");
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (_) => const RegisterPage(),
+                  ),
+                );
               },
               child: const Text(
                 "Zaten hesabın var mı? Giriş yap",

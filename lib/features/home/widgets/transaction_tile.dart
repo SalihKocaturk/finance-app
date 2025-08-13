@@ -7,6 +7,7 @@ class TransactionTile extends StatelessWidget {
   final Color color;
   final IconData? icon;
   final String? imageUrl;
+  final double avatarSize;
 
   const TransactionTile({
     super.key,
@@ -16,22 +17,35 @@ class TransactionTile extends StatelessWidget {
     required this.color,
     this.icon,
     this.imageUrl,
+    this.avatarSize = 50,
   });
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = avatarSize * 0.5;
+
     return ListTile(
       leading: Container(
+        width: avatarSize,
+        height: avatarSize,
         decoration: BoxDecoration(
           color: Colors.black.withAlpha(30),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(avatarSize / 3),
         ),
-        padding: const EdgeInsets.all(4),
+        padding: EdgeInsets.all(avatarSize * 0.1),
         child: imageUrl != null
-            ? CircleAvatar(backgroundImage: NetworkImage(imageUrl!))
+            ? CircleAvatar(
+                radius: avatarSize / 2,
+                backgroundImage: NetworkImage(imageUrl!),
+              )
             : CircleAvatar(
+                radius: avatarSize / 2,
                 backgroundColor: Colors.black,
-                child: Icon(icon, color: Colors.white),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: iconSize,
+                ),
               ),
       ),
       title: Text(title),

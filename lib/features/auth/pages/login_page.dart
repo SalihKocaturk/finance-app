@@ -2,18 +2,19 @@ import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
 import 'package:expense_tracker/features/auth/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../core/router/router_enum.dart';
 import '../providers/auth_form_providers.dart';
 import '../widgets/custom_text_field.dart';
+import 'register_page.dart';
+//! bu sayfanın yapısında hata yapmışız, lokal değişkenlere yazılıyor providera yazılmıyor!!
+//! bu sayfanın yapısında hata yapmışız, lokal değişkenlere yazılıyor providera yazılmıyor!!
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var authNotifier = ref.watch(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
     var email = ref.read(loginEmailProvider.notifier).state;
     var password = ref.read(loginPasswordProvider.notifier).state;
     return Scaffold(
@@ -59,7 +60,11 @@ class LoginPage extends ConsumerWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onTap: () {
-                context.go(RouterEnum.register.path);
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (_) => const RegisterPage(),
+                  ),
+                );
               },
             ),
           ],

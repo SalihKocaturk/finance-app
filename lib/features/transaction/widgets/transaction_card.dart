@@ -17,8 +17,6 @@ class TransactionActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
-
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: onTap,
@@ -41,7 +39,9 @@ class TransactionActionCard extends StatelessWidget {
             const Gap(10),
             Text(
               title,
-              style: text.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/transaction_card.dart';
 import '../widgets/transaction_list_item.dart';
+import 'transaction_details_page.dart';
 
 class TransactionPage extends StatelessWidget {
   const TransactionPage({super.key});
@@ -11,47 +12,44 @@ class TransactionPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("İşlemler"),
-        leadingWidth: 70,
-        leading: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withAlpha(20),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  color: Colors.black,
-                  onPressed: () {},
-                  padding: const EdgeInsets.all(4.0),
-                  iconSize: 22,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
-            const Row(
+            Row(
               children: [
                 Expanded(
-                  child: TransactionActionCard(
-                    title: 'Gelir Ekle',
-                    icon: Icons.savings_rounded,
-                    bg: Color(0xFF7E57C2),
+                  child: GestureDetector(
+                    child: const TransactionActionCard(
+                      title: 'Gelir Ekle',
+                      icon: Icons.savings_rounded,
+                      bg: Color(0xFF7E57C2),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const TransactionDetailsPage(modeIndex: 0),
+                        ),
+                      );
+                    },
                   ),
                 ),
-                Padding(padding: EdgeInsets.only(left: 12)),
+                const Padding(padding: EdgeInsets.only(left: 12)),
                 Expanded(
-                  child: TransactionActionCard(
-                    title: 'Gider Ekle',
-                    icon: Icons.shopping_bag_rounded,
-                    bg: Color(0xFFF57C00),
+                  child: GestureDetector(
+                    child: const TransactionActionCard(
+                      title: 'Gider Ekle',
+                      icon: Icons.shopping_bag_rounded,
+                      bg: Color(0xFFF57C00),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const TransactionDetailsPage(modeIndex: 1),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -69,13 +67,22 @@ class TransactionPage extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  const TransactionListItem(
+                  TransactionListItem(
                     title: 'Maaş',
                     dateText: '30 Nis 2022',
                     amountText: '+₺1500',
                     isIncome: true,
                     icon: Icons.wallet_rounded,
-                    iconBg: Color(0xFF7E57C2),
+                    iconBg: const Color(0xFF7E57C2),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const TransactionDetailsPage(
+                            modeIndex: 2,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   const TransactionListItem(
                     title: 'Paypal',

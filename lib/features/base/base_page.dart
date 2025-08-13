@@ -1,4 +1,4 @@
-import 'package:expense_tracker/widgets/custom_bottom_navigation_bar.dart';
+import 'package:expense_tracker/features/base/widgets/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,7 +25,7 @@ class BasePage extends ConsumerWidget {
         index: currentIndex,
         children: pages,
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(index: currentIndex),
+      bottomNavigationBar: CustomNavigationBar(index: currentIndex),
     );
   }
 }
