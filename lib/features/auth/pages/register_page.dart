@@ -1,3 +1,4 @@
+import 'package:expense_tracker/features/auth/pages/login_page.dart';
 import 'package:expense_tracker/features/auth/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,7 +75,7 @@ class RegisterPage extends ConsumerWidget {
               onTap: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (_) => const RegisterPage(),
+                    builder: (_) => const LoginPage(),
                   ),
                 );
               },

@@ -18,3 +18,4 @@ class Balance extends Equatable {
   @override
   List<Object?> get props => [id, income, expense];
 }
+//#41495E

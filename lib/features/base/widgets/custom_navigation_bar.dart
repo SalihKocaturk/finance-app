@@ -20,17 +20,17 @@ class CustomNavigationBar extends ConsumerWidget {
         NavigationDestination(
           icon: Icon(Icons.home_outlined, color: Colors.black),
           selectedIcon: Icon(Icons.home, color: Color(0xFF7F00FF)),
-          label: 'Ev',
+          label: 'Home',
         ),
         NavigationDestination(
           icon: Icon(Icons.add_circle_outline, color: Colors.black),
           selectedIcon: Icon(Icons.add_circle, color: Color(0xFF7F00FF)),
-          label: 'İşlem Ekle',
+          label: 'Add Transaction',
         ),
         NavigationDestination(
           icon: Icon(Icons.person_outline, color: Colors.black),
           selectedIcon: Icon(Icons.person, color: Color(0xFF7F00FF)),
-          label: 'Profil',
+          label: 'Profile',
         ),
       ],
     );

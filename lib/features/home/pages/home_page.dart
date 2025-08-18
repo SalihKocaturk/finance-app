@@ -1,10 +1,17 @@
+import 'package:expense_tracker/core/extensions/extensions.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
+import 'package:expense_tracker/features/home/providers/balance_provider.dart';
 import 'package:expense_tracker/features/home/widgets/total_balance_card.dart';
+import 'package:expense_tracker/features/transaction/providers/transaction_list_provider.dart';
+import 'package:expense_tracker/features/transaction/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../widgets/transaction_tile.dart';
+import '../../../core/domain/enums/transaction_type.dart';
+import '../../base/providers/bottom_nav_provider.dart';
+import '../../transaction/pages/transaction_details_page.dart';
+import '../../transaction/widgets/transaction_list_item.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -12,10 +19,12 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authNotifier = ref.watch(authProvider.notifier);
+    final balance = ref.watch(balanceProvider);
+    final transactionList = ref.watch(transactionListProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Ev"),
+        title: const Text("Home"),
         leadingWidth: 120,
         leading: Row(
           children: [
@@ -61,52 +70,79 @@ class HomePage extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            const TotalBalanceCard(
-              balance: "3,257.00",
-              income: "2,350.00",
-              expenses: "950.00",
+            TotalBalanceCard(
+              balance: balance.balance.toString(),
+              income: balance.income.toString(),
+              expenses: balance.expense.toString(),
             ),
-            const Gap(10),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 7),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "İşlemler",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "Hepsine göz at",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
+            const Gap(20),
+            if (transactionList.isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "İşlemler",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    TextButton(
+                      child: const Text(
+                        "Hepsine göz at",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      onPressed: () {
+                        ref.read(bottomNavProvider.notifier).state = 1;
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Gap(10),
-            Expanded(
-              child: ListView(
-                children: const [
-                  TransactionTile(
-                    title: "Bereket Döner",
-                    subtitle: "14:20",
-                    amount: "-₺400",
-                    color: Colors.green,
-                    icon: Icons.payment,
-                  ),
-                  TransactionTile(
-                    title: "Martı",
-                    subtitle: "22:40",
-                    amount: "-₺350",
-                    color: Colors.red,
-                    icon: Icons.directions_car,
-                  ),
-                ],
+              const Gap(10),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: transactionList.length < 10 ? transactionList.length : 10,
+                  itemBuilder: (context, index) {
+                    var transaction = transactionList[index];
+                    return GestureDetector(
+                      child: TransactionListItem(
+                        title: transaction.category.label,
+                        dateText: transaction.date.formatAsDMY(),
+                        amountText: transaction.amount.toString(),
+                        isIncome: transaction.category.type == TransactionType.income,
+                        icon: transaction.category.icon,
+                        iconBg: transaction.category.color,
+                      ),
+                      onTap: () {
+                        ref.read(transactionProvider.notifier).setTransaction(transaction);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const TransactionDetailsPage(modeIndex: 2),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
+            ] else ...[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/no_data_found.png',
+                      fit: BoxFit.contain,
+                    ),
+                    const Text("No Transactions Found"),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../../core/domain/entities/transaction_categories.dart';
-import '../../../core/domain/enums/transaction_category.dart';
 import '../../../core/domain/enums/transaction_type.dart'; // TransactionType enum dosyan
+import '../../../core/domain/models/transaction_category.dart';
 
 class CategoryDropdownField extends StatelessWidget {
   final String label;
@@ -46,41 +46,38 @@ class CategoryDropdownField extends StatelessWidget {
       );
     }).toList();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(11),
-            border: Border.all(color: Colors.grey.withAlpha(60)),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          child: Row(
-            children: [
-              if (leadingIcon != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Icon(leadingIcon, size: 22, color: Colors.grey.withAlpha(180)),
-                ),
-              Expanded(
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<TransactionCategory>(
-                    value: safeValue,
-                    isExpanded: true,
-                    items: items,
-                    hint: Text(hint, style: const TextStyle(color: Color(0xFF999999), fontSize: 15)),
-                    onChanged: onChanged,
-                    dropdownColor: Colors.white,
-                    icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey.withAlpha(180)),
-                  ),
-                ),
-              ),
-            ],
-          ),
+    return DropdownButtonFormField<TransactionCategory>(
+      value: safeValue,
+      items: items,
+      isExpanded: true,
+      onChanged: onChanged,
+      icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey.withAlpha(180)),
+      hint: Text(hint, style: const TextStyle(color: Color(0xFF999999), fontSize: 15)),
+      decoration: InputDecoration(
+        floatingLabelBehavior: FloatingLabelBehavior.always, // label hep yukarıda
+        label: Text(label),
+        filled: true,
+        fillColor: const Color(0xFFFCFCFC),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        prefixIcon: leadingIcon != null
+            ? Padding(
+                padding: const EdgeInsetsDirectional.only(start: 12, end: 8),
+                child: Icon(leadingIcon, size: 22, color: Colors.black),
+              )
+            : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
         ),
-      ],
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
+        ),
+      ),
     );
   }
 }

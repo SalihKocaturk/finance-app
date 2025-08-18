@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
-    this.isPassword = false, // 🔑 Varsayılan değer
+    this.isPassword = false,
     required this.hintText,
     required this.onChanged,
     this.initialValue,

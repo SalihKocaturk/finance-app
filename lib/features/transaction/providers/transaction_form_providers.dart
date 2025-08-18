@@ -1,8 +1,8 @@
-import 'package:expense_tracker/core/domain/enums/transaction_category.dart';
+import 'package:expense_tracker/core/domain/models/transaction_category.dart';
 import 'package:riverpod/riverpod.dart';
 
-final amountProvider = StateProvider<double>(
-  (ref) => 0.0,
+final amountProvider = StateProvider<double?>(
+  (ref) => null,
 );
 final categoryProvider = StateProvider<TransactionCategory?>(
   (ref) => null,

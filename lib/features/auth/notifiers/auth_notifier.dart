@@ -21,7 +21,7 @@ class AuthNotifier extends Notifier<User> {
     final password = ref.read(loginPasswordProvider);
     final user = await authService.signInWithEmailAndPassword(email, password);
     if (user != null) {
-      showToast(message: "Kayıt başarılı.");
+      showToast("Kayıt başarılı.");
 
       state = user;
       await userRepository.setUser(state);
@@ -35,7 +35,7 @@ class AuthNotifier extends Notifier<User> {
     final password = ref.read(registerPasswordProvider);
     final password2 = ref.read(registerPassword2Provider);
     if (password2 != password) {
-      showToast(message: "Sifreler uyusmuyor.");
+      showToast("Sifreler uyusmuyor.");
     } else {
       final user = await authService.signUpWithEmailAndPassword(email: email, password: password, name: name);
       if (user != null) {
@@ -43,7 +43,7 @@ class AuthNotifier extends Notifier<User> {
         await userRepository.setUser(state);
         ref.invalidate(hasUserProvider);
       } else {
-        showToast(message: "Kayıt başarısız.");
+        showToast("Kayıt başarısız.");
       }
     }
   }

@@ -1,14 +1,13 @@
 import 'package:expense_tracker/core/domain/entities/transaction_categories.dart';
-import 'package:expense_tracker/features/transaction/providers/transaction_form_providers.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/domain/models/transaction.dart' as model;
+import '../../../core/domain/models/transaction.dart';
+import '../providers/transaction_form_providers.dart';
 
-class TransactionNotifier extends Notifier<model.Transaction?> {
+class TransactionNotifier extends Notifier<Transaction> {
   @override
-  model.Transaction build() {
-    return model.Transaction(
+  Transaction build() {
+    return Transaction(
       category: transactionCategories.first,
       amount: 0,
       date: DateTime.now(),
@@ -16,21 +15,20 @@ class TransactionNotifier extends Notifier<model.Transaction?> {
     );
   }
 
-  Future<void> save() async {
-    final amount = ref.read(amountProvider);
-    final category = ref.read(categoryProvider);
-    final date = ref.read(dateProvider);
-    final description = ref.read(descriptionProvider);
-    state = model.Transaction(
-      category: category ?? transactionCategories.first,
-      amount: amount,
-      date: date ?? DateTime.now(),
-      details: description ?? "",
-    );
-    debugPrint('kayıt başarılı: $state');
+  Future<void> setTransaction(Transaction t) async {
+    state = t;
+    ref.read(descriptionProvider.notifier).state = state.details;
+    ref.read(categoryProvider.notifier).state = state.category;
+    ref.read(amountProvider.notifier).state = state.amount;
+    ref.read(dateProvider.notifier).state = state.date;
   }
 
-  Future<void> delete() async {}
+  Future<void> cleanProviders() async {
+    ref.invalidate(amountProvider);
+    ref.invalidate(categoryProvider);
+    ref.invalidate(dateProvider);
+    ref.invalidate(descriptionProvider);
+  }
 
   Future<void> edit() async {}
 }

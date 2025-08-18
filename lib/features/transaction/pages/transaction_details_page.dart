@@ -1,78 +1,107 @@
-import 'package:expense_tracker/features/transaction/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 
 import '../../../core/constants/toast.dart';
+import '../../../core/widgets/custom_date_picker.dart';
+import '../../../core/widgets/custom_text_field.dart';
+import '../../../core/widgets/pop_page_button.dart';
 import '../providers/transaction_form_providers.dart';
+import '../providers/transaction_list_provider.dart';
+import '../providers/transaction_provider.dart';
 import '../widgets/category_dropdown_picker.dart';
-import '../widgets/custom_date_picker.dart';
-import '../widgets/custom_text_field.dart';
 
 class TransactionDetailsPage extends ConsumerWidget {
   final int modeIndex;
-  const TransactionDetailsPage({super.key, required this.modeIndex});
+  const TransactionDetailsPage({
+    super.key,
+    required this.modeIndex,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final category = ref.watch(categoryProvider);
     final date = ref.watch(dateProvider);
-    final transactionNotifier = ref.read(transactionProvider.notifier);
+    final transactionListNotifier = ref.read(transactionListProvider.notifier);
+    final amount = ref.watch(amountProvider);
+    final transaction = ref.read(transactionProvider);
+
+    final description = ref.watch(descriptionProvider);
+    final canSave = category != null && date != null && description != null && amount != 0.00;
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: Row(
+          children: [
+            const SizedBox(width: 8),
+            PopPageButton(
+              onTap: () {
+                ref.read(transactionProvider.notifier).cleanProviders();
+
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
           children: [
+            const Gap(3),
             CustomTextField(
-              label: 'Tutar',
-              hint: '₺0.00',
-              leadingIcon: Icons.attach_money,
+              label: "amount",
+              hintText: '₺0.00',
               onChanged: (value) {
                 final parsedValue = double.tryParse(value);
                 if (parsedValue != null) {
                   ref.read(amountProvider.notifier).state = parsedValue;
                 } else {
-                  showToast(message: 'Lütfen geçerli bir sayı giriniz');
+                  showToast('Lütfen geçerli bir sayı giriniz');
                 }
               },
             ),
-            const SizedBox(height: 14),
 
+            const Gap(17),
             CategoryDropdownField(
-              label: 'Kategori',
-              hint: 'Kategori seç',
+              label: 'Category',
+              hint: 'Choose Category',
               modeIndex: modeIndex,
               leadingIcon: Icons.category,
               value: category,
               onChanged: (val) => ref.read(categoryProvider.notifier).state = val,
             ),
-            const SizedBox(height: 14),
 
+            const Gap(17),
             CustomDateField(
-              label: 'Tarih',
-              hint: 'GG.AA.YYYY',
+              label: 'Date',
+              hint: 'DD.MM.YYYY',
               value: date,
               onChanged: (val) => ref.read(dateProvider.notifier).state = val,
             ),
-            const SizedBox(height: 14),
-
+            const Gap(17),
             CustomTextField(
-              label: 'Açıklama',
-              hint: 'İsteğe bağlı not...',
-              leadingIcon: Icons.notes,
-              maxLines: 3,
+              label: "Description",
+              initialValue: description,
+              hintText: 'optional description',
+              isPassword: false,
+              maxLine: 3,
               onChanged: (val) => ref.read(descriptionProvider.notifier).state = val,
             ),
 
             const SizedBox(height: 24),
+
             SizedBox(
               height: 52,
               child: FilledButton.icon(
-                onPressed: () {
-                  transactionNotifier.save();
-                },
+                onPressed: canSave
+                    ? () {
+                        transactionListNotifier.save(modeIndex == 2 ? transaction.id : null);
+                        Navigator.of(context).pop();
+                      }
+                    : null,
                 icon: const Icon(Icons.check),
                 label: const Text('Kaydet'),
               ),

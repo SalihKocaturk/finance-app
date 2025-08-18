@@ -37,13 +37,13 @@ class FirebaseAuthService {
       return user;
     } on firebase.FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        showToast(message: 'E-mail kullanılıyor');
+        showToast('E-mail kullanılıyor');
       } else {
         //  hata donmeli
       }
       return null;
     } catch (e) {
-      showToast(message: 'hata: $e');
+      showToast('hata: $e');
       return null;
     }
   }
@@ -70,20 +70,20 @@ class FirebaseAuthService {
           );
           return user;
         } else {
-          showToast(message: 'Firestore’da kullanıcı verisi bulunamadı.');
+          showToast('Firestore’da kullanıcı verisi bulunamadı.');
         }
       }
     } on firebase.FirebaseAuthException catch (e) {
       // hatalı girisleri gosterme
       if (e.code == 'user-not-found') {
-        showToast(message: 'Kullanıcı bulunamadı.');
+        showToast('Kullanıcı bulunamadı.');
       } else if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
-        showToast(message: 'Şifre yanlış.');
+        showToast('Şifre yanlış.');
       } else {
-        showToast(message: 'Firebase hatası: ${e.message}');
+        showToast('Firebase hatası: ${e.message}');
       }
     } catch (e) {
-      showToast(message: 'Beklenmeyen hata: $e');
+      showToast('Beklenmeyen hata: $e');
     }
     return null;
   }

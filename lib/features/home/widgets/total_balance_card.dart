@@ -33,7 +33,7 @@ class TotalBalanceCard extends StatelessWidget {
           Row(
             children: [
               const Text(
-                "Bakiye",
+                "Balance",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -77,7 +77,7 @@ class TotalBalanceCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Gelirler",
+                      "Income",
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 13,
@@ -85,7 +85,7 @@ class TotalBalanceCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "$expenses₺",
+                      "$income₺",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -104,7 +104,7 @@ class TotalBalanceCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Giderler",
+                      "Expenses",
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 13,

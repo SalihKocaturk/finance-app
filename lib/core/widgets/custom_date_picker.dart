@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class CustomDateField extends StatelessWidget {
   final String label;
@@ -51,48 +50,43 @@ class CustomDateField extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = value != null ? _fmt(value!) : '';
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF666666),
+    return GestureDetector(
+      onTap: () => _openPicker(context),
+      behavior: HitTestBehavior.opaque,
+      child: InputDecorator(
+        isFocused: false,
+        isEmpty: text.isEmpty,
+        decoration: InputDecoration(
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          label: Text(label),
+          filled: true,
+          fillColor: const Color(0xFFFCFCFC),
+          hintText: hint,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
           ),
         ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () => _openPicker(context),
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(11),
-              border: Border.all(color: Colors.grey.withAlpha(60)),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-            child: Row(
-              children: [
-                Icon(Icons.calendar_today, size: 18, color: Colors.grey.withAlpha(180)),
-                const Gap(10),
-
-                Expanded(
-                  child: Text(
-                    text.isEmpty ? hint : text,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: text.isEmpty ? const Color(0xFF999999) : Colors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-              ],
-            ),
+        child: Text(
+          text.isEmpty ? '' : text,
+          style: TextStyle(
+            fontSize: 15,
+            color: text.isEmpty ? const Color(0xFF999999) : Colors.black,
           ),
         ),
-      ],
+      ),
     );
   }
 }

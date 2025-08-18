@@ -25,7 +25,9 @@ class BasePage extends ConsumerWidget {
         index: currentIndex,
         children: pages,
       ),
-      bottomNavigationBar: CustomNavigationBar(index: currentIndex),
+      bottomNavigationBar: CustomNavigationBar(
+        index: currentIndex,
+      ),
     );
   }
 }

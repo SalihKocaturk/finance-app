@@ -21,7 +21,7 @@ class TransactionListItem extends StatelessWidget {
     required this.iconBg,
     this.onTap,
   });
-
+  //TODO: dismissable kullanılacak
   @override
   Widget build(BuildContext context) {
     return ListTile(

@@ -1,14 +1,24 @@
+import 'package:expense_tracker/core/constants/toast.dart';
+import 'package:expense_tracker/core/domain/enums/transaction_type.dart';
+import 'package:expense_tracker/core/extensions/extensions.dart';
+import 'package:expense_tracker/features/transaction/providers/transaction_provider.dart';
+import 'package:expense_tracker/features/transaction/widgets/transaction_list_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../providers/transaction_list_provider.dart';
 import '../widgets/transaction_card.dart';
-import '../widgets/transaction_list_item.dart';
 import 'transaction_details_page.dart';
 
-class TransactionPage extends StatelessWidget {
+class TransactionPage extends ConsumerWidget {
   const TransactionPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final transactionList = ref.watch(transactionListProvider);
+    final transactionListNotifier = ref.read(transactionListProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("İşlemler"),
@@ -65,66 +75,52 @@ class TransactionPage extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: ListView(
-                children: [
-                  TransactionListItem(
-                    title: 'Maaş',
-                    dateText: '30 Nis 2022',
-                    amountText: '+₺1500',
-                    isIncome: true,
-                    icon: Icons.wallet_rounded,
-                    iconBg: const Color(0xFF7E57C2),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const TransactionDetailsPage(
-                            modeIndex: 2,
-                          ),
+              child: ListView.builder(
+                itemCount: transactionList.length,
+                itemBuilder: (context, index) {
+                  var transaction = transactionList[index];
+
+                  return Slidable(
+                    key: ValueKey(transaction.id),
+                    endActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      extentRatio: 0.20,
+                      children: [
+                        SlidableAction(
+                          onPressed: (_) {
+                            transactionListNotifier.delete(transaction.id);
+                            showToast('${transaction.category.label} silindi');
+                          },
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+
+                          icon: Icons.delete,
+                          label: 'Sil',
                         ),
-                      );
-                    },
-                  ),
-                  const TransactionListItem(
-                    title: 'Paypal',
-                    dateText: '28 Nis 2022',
-                    amountText: '+₺3500',
-                    isIncome: true,
-                    icon: Icons.account_balance_wallet_rounded,
-                    iconBg: Color(0xFF2E7D32),
-                  ),
-                  const TransactionListItem(
-                    title: 'Yemek',
-                    dateText: '26 Nis 2022',
-                    amountText: '-₺300',
-                    isIncome: false,
-                    icon: Icons.fastfood_rounded,
-                    iconBg: Color(0xFFF57C00),
-                  ),
-                  const TransactionListItem(
-                    title: 'İşCep',
-                    dateText: '27 Nis 2022',
-                    amountText: '+₺800',
-                    isIncome: true,
-                    icon: Icons.work_history_rounded,
-                    iconBg: Color(0xFF26A69A),
-                  ),
-                  const TransactionListItem(
-                    title: 'Fatura',
-                    dateText: '27 Nis 2022',
-                    amountText: '-₺600',
-                    isIncome: false,
-                    icon: Icons.receipt_long_rounded,
-                    iconBg: Color(0xFF546E7A),
-                  ),
-                  const TransactionListItem(
-                    title: 'İndirim',
-                    dateText: '20 Nis 2022',
-                    amountText: '+₺200',
-                    isIncome: true,
-                    icon: Icons.local_offer_rounded,
-                    iconBg: Color(0xFF7B1FA2),
-                  ),
-                ],
+                      ],
+                    ),
+                    child: GestureDetector(
+                      child: TransactionListItem(
+                        title: transaction.category.label,
+                        dateText: transaction.date.formatAsDMY(),
+                        amountText: transaction.amount.toString(),
+                        isIncome: transaction.category.type == TransactionType.income,
+                        icon: transaction.category.icon,
+                        iconBg: transaction.category.color,
+                      ),
+                      onTap: () {
+                        ref.read(transactionProvider.notifier).setTransaction(transaction);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const TransactionDetailsPage(
+                              modeIndex: 2,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
             ),
           ],
