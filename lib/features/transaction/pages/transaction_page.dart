@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../../../core/widgets/sheets/no_data_widget.dart';
 import '../providers/transaction_list_provider.dart';
 import '../widgets/transaction_card.dart';
 import 'transaction_details_page.dart';
@@ -74,6 +75,7 @@ class TransactionPage extends ConsumerWidget {
                 ),
               ),
             ),
+            if (transactionList.isEmpty) const NoDataWidget(),
             Expanded(
               child: ListView.builder(
                 itemCount: transactionList.length,

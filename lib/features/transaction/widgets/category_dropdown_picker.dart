@@ -59,12 +59,7 @@ class CategoryDropdownField extends StatelessWidget {
         filled: true,
         fillColor: const Color(0xFFFCFCFC),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        prefixIcon: leadingIcon != null
-            ? Padding(
-                padding: const EdgeInsetsDirectional.only(start: 12, end: 8),
-                child: Icon(leadingIcon, size: 22, color: Colors.black),
-              )
-            : null,
+
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Color(0xFFDBDFE9)),

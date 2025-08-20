@@ -51,5 +51,6 @@ class AuthNotifier extends Notifier<User> {
   Future<void> logOut() async {
     await userRepository.removeUser();
     ref.invalidate(hasUserProvider);
+    ref.invalidate(userProvider);
   }
 }

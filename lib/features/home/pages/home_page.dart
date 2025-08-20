@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/extensions/extensions.dart';
+import 'package:expense_tracker/core/widgets/sheets/no_data_widget.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
 import 'package:expense_tracker/features/home/providers/balance_provider.dart';
 import 'package:expense_tracker/features/home/widgets/total_balance_card.dart';
@@ -26,45 +27,45 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("Home"),
         leadingWidth: 120,
-        leading: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withAlpha(20),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.menu),
-                  color: Colors.black,
-                  onPressed: () {},
-                  padding: const EdgeInsets.all(4.0),
-                  iconSize: 23,
-                ),
-              ),
-            ),
-          ],
-        ),
+        // leading: Row(
+        //   children: [
+        //     Padding(
+        //       padding: const EdgeInsets.only(left: 12.0),
+        //       child: Container(
+        //         decoration: BoxDecoration(
+        //           color: Colors.black.withAlpha(20),
+        //           borderRadius: BorderRadius.circular(12),
+        //         ),
+        //         child: IconButton(
+        //           icon: const Icon(Icons.menu),
+        //           color: Colors.black,
+        //           onPressed: () {},
+        //           padding: const EdgeInsets.all(4.0),
+        //           iconSize: 23,
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        // ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withAlpha(20),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: IconButton(
-                onPressed: () async {
-                  await authNotifier.logOut();
-                },
-                icon: const Icon(Icons.notifications),
-                color: Colors.black,
-                padding: const EdgeInsets.all(4.0),
-                iconSize: 23,
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(right: 12.0),
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       color: Colors.black.withAlpha(20),
+          //       borderRadius: BorderRadius.circular(12),
+          //     ),
+          //     child: IconButton(
+          //       onPressed: () async {
+          //         await authNotifier.logOut();
+          //       },
+          //       icon: const Icon(Icons.notifications),
+          //       color: Colors.black,
+          //       padding: const EdgeInsets.all(4.0),
+          //       iconSize: 23,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       body: Padding(
@@ -79,28 +80,29 @@ class HomePage extends ConsumerWidget {
               expenses: balance.expense.toString(),
             ),
             const Gap(20),
-            if (transactionList.isNotEmpty) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 7),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "İşlemler",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Transactions",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  if (transactionList.isNotEmpty)
                     TextButton(
                       child: const Text(
-                        "Hepsine göz at",
+                        "See All",
                         style: TextStyle(color: Colors.grey),
                       ),
                       onPressed: () {
                         ref.read(bottomNavProvider.notifier).state = 1;
                       },
                     ),
-                  ],
-                ),
+                ],
               ),
+            ),
+            if (transactionList.isNotEmpty) ...[
               const Gap(10),
               Expanded(
                 child: ListView.builder(
@@ -129,19 +131,7 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
             ] else ...[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/no_data_found.png',
-                      fit: BoxFit.contain,
-                    ),
-                    const Text("No Transactions Found"),
-                  ],
-                ),
-              ),
+              const NoDataWidget(),
             ],
           ],
         ),

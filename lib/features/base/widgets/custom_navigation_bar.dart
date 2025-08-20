@@ -25,7 +25,12 @@ class CustomNavigationBar extends ConsumerWidget {
         NavigationDestination(
           icon: Icon(Icons.add_circle_outline, color: Colors.black),
           selectedIcon: Icon(Icons.add_circle, color: Color(0xFF7F00FF)),
-          label: 'Add Transaction',
+          label: 'Transaction',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.bar_chart, color: Colors.black),
+          selectedIcon: Icon(Icons.person, color: Color(0xFF7F00FF)),
+          label: 'Statistics',
         ),
         NavigationDestination(
           icon: Icon(Icons.person_outline, color: Colors.black),

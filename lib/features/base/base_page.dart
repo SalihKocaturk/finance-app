@@ -1,4 +1,5 @@
 import 'package:expense_tracker/features/base/widgets/custom_navigation_bar.dart';
+import 'package:expense_tracker/features/statistics/pages/statistics_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,6 +18,8 @@ class BasePage extends ConsumerWidget {
     final pages = const [
       HomePage(),
       TransactionPage(),
+      StatisticsPage(),
+
       ProfilePage(),
     ];
 

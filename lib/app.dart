@@ -24,12 +24,17 @@ class App extends ConsumerWidget {
     }
 
     final isLoggedIn = hasUser.value ?? false;
+    if (isLoggedIn) {}
 
     return MaterialApp(
       title: 'Expense Tracker',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+        ),
       ),
       home: isLoggedIn ? const BasePage() : const LoginPage(),
     );

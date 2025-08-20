@@ -1,7 +1,12 @@
+import 'package:expense_tracker/core/constants/terms_and_conditions.dart';
+import 'package:expense_tracker/core/widgets/sheets/log_out_bottom_sheet.dart';
+import 'package:expense_tracker/core/widgets/sheets/show_paragraph_bottom_sheet.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
+import 'package:expense_tracker/features/profile/pages/edit_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/constants/privacy_policy.dart';
 import '../widgets/option_tile.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -11,7 +16,7 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authNotifier = ref.watch(authProvider.notifier);
-
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profil'),
@@ -47,6 +52,16 @@ class ProfilePage extends ConsumerWidget {
                     ),
                   ),
                 ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const EditProfilePage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
               ],
             ),
           ),
@@ -56,15 +71,26 @@ class ProfilePage extends ConsumerWidget {
             icon: Icons.person_rounded,
             iconBgColor: Color(0xFF7E57C2),
           ),
-          const OptionTile(
-            title: 'Security Code',
-            icon: Icons.lock_rounded,
-            iconBgColor: Color(0xFF43A047),
-          ),
-          const OptionTile(
+
+          OptionTile(
             title: 'Privacy Policy',
             icon: Icons.privacy_tip_rounded,
-            iconBgColor: Color(0xFF3949AB),
+            iconBgColor: const Color(0xFF3949AB),
+            onTap: () => showParagraphBottomSheet(
+              context,
+              title: 'Privacy Policy',
+              content: privacyPolicyText,
+            ),
+          ),
+          OptionTile(
+            title: 'Terms And Conditions',
+            icon: Icons.rule_rounded,
+            iconBgColor: const Color(0xFFF57C00),
+            onTap: () => showParagraphBottomSheet(
+              context,
+              title: 'Terms And Conditions',
+              content: termsAndConditionsText,
+            ),
           ),
           const OptionTile(
             title: 'Settings',
@@ -76,7 +102,17 @@ class ProfilePage extends ConsumerWidget {
             icon: Icons.logout_rounded,
             iconBgColor: const Color(0xFFE53935),
             onTap: () {
-              authNotifier.logOut();
+              showLogoutBottomSheet(
+                context,
+                () {
+                  authNotifier.logOut();
+                  Navigator.pop(context);
+                },
+                () {
+                  Navigator.pop(context);
+                },
+                height * 0.4,
+              );
             },
           ),
         ],

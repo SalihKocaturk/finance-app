@@ -44,10 +44,6 @@ class LoginPage extends ConsumerWidget {
 
               onChanged: (val) => password = val,
               initialValue: password,
-              isObscure: ref.watch(passwordVisibleProvider),
-              onVisibleIconPressed: () {
-                ref.read(passwordVisibleProvider.notifier).state = !ref.read(passwordVisibleProvider.notifier).state;
-              },
             ),
             const SizedBox(height: 20),
             SizedBox(

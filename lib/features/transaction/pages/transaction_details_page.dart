@@ -27,7 +27,7 @@ class TransactionDetailsPage extends ConsumerWidget {
     final transaction = ref.read(transactionProvider);
 
     final description = ref.watch(descriptionProvider);
-    final canSave = category != null && date != null && description != null && amount != 0.00;
+    final canSave = category != null && date != null && description != null && amount != 0.00 && amount != null;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -54,11 +54,13 @@ class TransactionDetailsPage extends ConsumerWidget {
             CustomTextField(
               label: "amount",
               hintText: '₺0.00',
+              inputType: TextInputType.number,
               onChanged: (value) {
                 final parsedValue = double.tryParse(value);
                 if (parsedValue != null) {
                   ref.read(amountProvider.notifier).state = parsedValue;
                 } else {
+                  ref.read(amountProvider.notifier).state = parsedValue;
                   showToast('Lütfen geçerli bir sayı giriniz');
                 }
               },

@@ -9,6 +9,7 @@ class UserRepository {
 
   Future<User?> getUser() async {
     final userdata = _userBox.get("current_user");
+    print(userdata);
     if (userdata != null) {
       return userdata;
     } else {
