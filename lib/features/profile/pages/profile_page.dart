@@ -2,7 +2,9 @@ import 'package:expense_tracker/core/constants/terms_and_conditions.dart';
 import 'package:expense_tracker/core/widgets/sheets/log_out_bottom_sheet.dart';
 import 'package:expense_tracker/core/widgets/sheets/show_paragraph_bottom_sheet.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
+import 'package:expense_tracker/features/profile/pages/accaount_info_page.dart';
 import 'package:expense_tracker/features/profile/pages/edit_profile_page.dart';
+import 'package:expense_tracker/features/settings/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -66,10 +68,17 @@ class ProfilePage extends ConsumerWidget {
             ),
           ),
 
-          const OptionTile(
+          OptionTile(
             title: 'Account Info',
             icon: Icons.person_rounded,
-            iconBgColor: Color(0xFF7E57C2),
+            iconBgColor: const Color(0xFF7E57C2),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const AccaountInfoPage(),
+                ),
+              );
+            },
           ),
 
           OptionTile(
@@ -92,10 +101,17 @@ class ProfilePage extends ConsumerWidget {
               content: termsAndConditionsText,
             ),
           ),
-          const OptionTile(
+          OptionTile(
             title: 'Settings',
             icon: Icons.settings_rounded,
-            iconBgColor: Color(0xFF26A69A),
+            iconBgColor: const Color(0xFF26A69A),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const SettingsPage(),
+                ),
+              );
+            },
           ),
           OptionTile(
             title: 'Logout',

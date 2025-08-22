@@ -34,7 +34,10 @@ class CustomTextField extends StatelessWidget {
         initialValue: initialValue,
         onChanged: onChanged,
         maxLines: maxLine,
-        decoration: _decoration(label: label, hintText: hintText),
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hintText,
+        ),
       );
     }
 
@@ -43,47 +46,18 @@ class CustomTextField extends StatelessWidget {
       onChanged: onObscureChanged,
       builder: (context, obscure, iconButton) {
         return TextFormField(
-          keyboardType: TextInputType.text,
+          keyboardType: inputType,
           initialValue: initialValue,
           onChanged: onChanged,
           obscureText: obscure,
           maxLines: 1,
-          decoration: _decoration(
-            label: label,
+          decoration: InputDecoration(
+            labelText: label,
             hintText: hintText,
             suffixIcon: iconButton,
           ),
         );
       },
-    );
-  }
-
-  // parametre var içerik değişiyor buna bak keyboardtype
-  InputDecoration _decoration({
-    required String label,
-    required String hintText,
-    Widget? suffixIcon,
-  }) {
-    return InputDecoration(
-      floatingLabelBehavior: FloatingLabelBehavior.always,
-      label: Text(label),
-      filled: true,
-      fillColor: const Color(0xFFFCFCFC),
-      hintText: hintText,
-      suffixIcon: suffixIcon,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
-      ),
     );
   }
 }

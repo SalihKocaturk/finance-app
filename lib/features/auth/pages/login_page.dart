@@ -18,6 +18,8 @@ class LoginPage extends ConsumerWidget {
     var email = ref.read(loginEmailProvider.notifier).state;
     var password = ref.read(loginPasswordProvider.notifier).state;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 50,

@@ -55,6 +55,10 @@ dependencies:
   flutter_slidable: ^4.0.0
   flutter_svg: ^2.2.0  
   image_picker: ^1.1.0
+  permission_handler: ^11.3.1
+  device_info_plus: ^9.1.2
+  google_fonts: 
+  shared_preferences:
 dev_dependencies:
   flutter_test:
     sdk: flutter

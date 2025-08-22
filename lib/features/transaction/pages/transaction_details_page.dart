@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -94,19 +95,15 @@ class TransactionDetailsPage extends ConsumerWidget {
             ),
 
             const SizedBox(height: 24),
-
-            SizedBox(
-              height: 52,
-              child: FilledButton.icon(
-                onPressed: canSave
-                    ? () {
-                        transactionListNotifier.save(modeIndex == 2 ? transaction.id : null);
-                        Navigator.of(context).pop();
-                      }
-                    : null,
-                icon: const Icon(Icons.check),
-                label: const Text('Kaydet'),
-              ),
+            CustomButton(
+              color: Colors.blue,
+              icon: Icons.check,
+              text: "Save",
+              canSave: canSave,
+              onTap: () {
+                transactionListNotifier.save(modeIndex == 2 ? transaction.id : null);
+                Navigator.of(context).pop();
+              },
             ),
           ],
         ),

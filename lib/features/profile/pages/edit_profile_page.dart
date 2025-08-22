@@ -1,5 +1,7 @@
-import 'package:expense_tracker/core/widgets/custom_date_picker.dart';
-import 'package:expense_tracker/core/widgets/custom_text_field.dart';
+import 'package:expense_tracker/core/services/image_picker_service.dart';
+import 'package:expense_tracker/core/widgets/custom_button.dart';
+import 'package:expense_tracker/core/widgets/sheets/image_picker_sheet.dart';
+import 'package:expense_tracker/features/profile/providers/form_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -14,8 +16,15 @@ class EditProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(userProvider);
     final u = userAsync.valueOrNull;
-    print(u);
-    final ImagePicker picker = ImagePicker();
+    final height = MediaQuery.of(context).size.height;
+    final XFile? imageData = ref.watch(imageProvider);
+    const String defaultAvatarUrl =
+        'https://media.licdn.com/dms/image/v2/D4D03AQGofiGE_BrpgA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718252507739?e=1757548800&v=beta&t=IxPzkLlNsqbpmeLCKCGEeem9eU7BiuErxZ9lfjx3ovE';
+
+    final avatarImage = ImageService().getImage(
+      file: imageData,
+      photoUrl: defaultAvatarUrl,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -46,133 +55,112 @@ class EditProfilePage extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Stack(
-              children: [
-                GestureDetector(
-                  child: const CircleAvatar(
-                    radius: 65,
-                    backgroundImage: NetworkImage(
-                      'https://media.licdn.com/dms/image/v2/D4D03AQGofiGE_BrpgA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718252507739?e=1757548800&v=beta&t=IxPzkLlNsqbpmeLCKCGEeem9eU7BiuErxZ9lfjx3ovE',
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Stack(
+                children: [
+                  GestureDetector(
+                    child: CircleAvatar(
+                      radius: 65,
+                      backgroundImage: avatarImage,
                     ),
+                    onTap: () {
+                      showImagePickerSheet(
+                        context,
+                        imageData != null,
+                        height * 0.2,
+                        onDelete: () {
+                          ref.read(imageProvider.notifier).state = null;
+                          Navigator.of(context).pop();
+                        },
+                        onPick: () {
+                          Navigator.of(context).pop();
+                          showImagePickerSheet(
+                            context,
+                            false,
+                            height * 0.2,
+                            onDelete: () {},
+                            onPick: () {},
+                            onGallery: () async {
+                              ref.read(imageProvider.notifier).state = await ImageService().pickFromGallery(context);
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            onCamera: () async {
+                              ref.read(imageProvider.notifier).state = await ImageService().pickFromCamera(context);
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                          );
+                        },
+                        onGallery: () async {
+                          ref.read(imageProvider.notifier).state = await ImageService().pickFromGallery(context);
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        onCamera: () async {
+                          ref.read(imageProvider.notifier).state = await ImageService().pickFromCamera(context);
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      );
+                    },
                   ),
-                  onTap: () async {
-                    final file = await picker.pickImage(
-                      source: ImageSource.gallery,
-                      maxWidth: 1024,
-                      imageQuality: 85,
-                    );
-                  },
-                ),
-                //-- edit button
-                Positioned(
-                  right: 10,
-                  bottom: 10,
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF00C2FF),
-                          Color(0xFF6C63FF),
+                  //edit button
+                  Positioned(
+                    right: 10,
+                    bottom: 10,
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFF00C2FF),
+                            Color(0xFF6C63FF),
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 6,
+                            offset: Offset(0, 3),
+                          ),
                         ],
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 6,
-                          offset: Offset(0, 3),
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        icon: const Icon(
+                          Icons.edit,
+                          size: 18,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 18,
-                        color: Colors.white,
+                        onPressed: () {},
                       ),
-                      onPressed: () {},
                     ),
-                  ),
-                ),
-              ],
-            ),
-            const Gap(10),
-            const Text("Profile Photo"),
-            const Gap(10),
-
-            CustomTextField(
-              initialValue: (!userAsync.isLoading && !userAsync.hasError) ? (u?.name ?? "") : "",
-              label: "Name",
-              hintText: "Your Name",
-              onChanged: (value) {},
-            ),
-            const Gap(20),
-
-            CustomDateField(
-              label: "Birthday",
-              hint: "Your Birthday",
-              onChanged: (value) {},
-            ),
-            const Gap(20),
-
-            CustomTextField(
-              label: "Email",
-              hintText: "Your Email",
-              onChanged: (value) {},
-            ),
-            const Gap(20),
-            //--Save Button
-            Ink(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFF00C2FF),
-                    Color(0xFF6C63FF),
-                  ],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(18),
-                    blurRadius: 14,
-                    spreadRadius: 0,
-                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(16),
+              const Gap(10),
+              const Text("Profile Photo"),
+              CustomButton(
+                color: Colors.blue,
+                icon: Icons.check,
+                text: "Save",
                 onTap: () {},
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Save",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -45,5 +45,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Permissions -->
+	<key>NSCameraUsageDescription</key>
+	<string>Bu uygulama fotoğraf çekmek için kameraya erişim ister.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Bu uygulama galeriden fotoğraf seçmek için erişim ister.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Bu uygulama fotoğrafları galerine kaydetmek için izin ister.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Bu uygulama video kaydı sırasında mikrofonu kullanır.</string>
 </dict>
 </plist>

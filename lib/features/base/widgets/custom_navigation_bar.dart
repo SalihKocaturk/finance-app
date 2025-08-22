@@ -12,28 +12,33 @@ class CustomNavigationBar extends ConsumerWidget {
     return NavigationBar(
       selectedIndex: index,
       onDestinationSelected: (i) => ref.read(bottomNavProvider.notifier).state = i,
-      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-      elevation: 8,
-      backgroundColor: Colors.white,
-      indicatorColor: const Color(0x207F00FF),
+
       destinations: const [
         NavigationDestination(
-          icon: Icon(Icons.home_outlined, color: Colors.black),
+          icon: Icon(
+            Icons.home_outlined,
+          ),
           selectedIcon: Icon(Icons.home, color: Color(0xFF7F00FF)),
           label: 'Home',
         ),
         NavigationDestination(
-          icon: Icon(Icons.add_circle_outline, color: Colors.black),
+          icon: Icon(
+            Icons.add_circle_outline,
+          ),
           selectedIcon: Icon(Icons.add_circle, color: Color(0xFF7F00FF)),
           label: 'Transaction',
         ),
         NavigationDestination(
-          icon: Icon(Icons.bar_chart, color: Colors.black),
+          icon: Icon(
+            Icons.bar_chart,
+          ),
           selectedIcon: Icon(Icons.person, color: Color(0xFF7F00FF)),
           label: 'Statistics',
         ),
         NavigationDestination(
-          icon: Icon(Icons.person_outline, color: Colors.black),
+          icon: Icon(
+            Icons.person_outline,
+          ),
           selectedIcon: Icon(Icons.person, color: Color(0xFF7F00FF)),
           label: 'Profile',
         ),
