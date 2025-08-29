@@ -16,14 +16,12 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  final savedLangCode = await LangStorage().readLocale();
+  final savedLang = await LangStorage().readLocale();
   final storage = CurrencyStorage();
   final saved = await storage.readCurrency();
+
   double initRate = 1.0;
   if (saved == CurrencyType.usd) {
     try {
@@ -31,15 +29,21 @@ void main() async {
     } catch (_) {
       initRate = 1.0;
     }
+  } else if (saved == CurrencyType.eur) {
+    try {
+      initRate = await CurrencyService().getEurRate();
+    } catch (_) {
+      initRate = 1.0;
+    }
   }
 
   runApp(
-    OverlaySupport.global(
-      child: EasyLocalization(
-        path: 'assets/translations',
-        supportedLocales: supportedLocales,
-        fallbackLocale: const Locale('en'),
-        startLocale: savedLangCode ?? const Locale('en'),
+    EasyLocalization(
+      path: 'assets/translations',
+      supportedLocales: supportedLocales,
+      fallbackLocale: const Locale('en'),
+      startLocale: savedLang ?? const Locale('en'),
+      child: OverlaySupport.global(
         child: ProviderScope(
           overrides: [
             currencyTypeProvider.overrideWith((ref) => saved ?? CurrencyType.tl),

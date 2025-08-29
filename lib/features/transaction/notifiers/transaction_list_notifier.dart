@@ -24,8 +24,8 @@ class TransactionListNotifier extends Notifier<List<Transaction>> {
     final usdRate = await CurrencyService().getUsdRate();
     final eurRate = await CurrencyService().getEurRate();
 
-    double toTl(double amount, CurrencyType ct) {
-      switch (ct) {
+    double toTl(double amount, CurrencyType currencyType) {
+      switch (currencyType) {
         case CurrencyType.tl:
           return amount;
         case CurrencyType.usd:

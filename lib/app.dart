@@ -15,30 +15,28 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasUser = ref.watch(hasUserProvider);
-
-    if (hasUser.isLoading) {
-      return const MaterialApp(
-        home: Scaffold(body: Center(child: CircularProgressIndicator())),
-      );
-    }
-    if (hasUser.hasError) {
-      return const MaterialApp(
-        home: Scaffold(body: Center(child: Text('Hata oluştu'))),
-      );
-    }
-
-    final isLoggedIn = hasUser.value ?? false;
-    if (isLoggedIn) {}
     final themeMode = ref.watch(themeProvider);
+
+    Widget home;
+    if (hasUser.isLoading) {
+      home = const Scaffold(body: Center(child: CircularProgressIndicator()));
+    } else if (hasUser.hasError) {
+      home = const Scaffold(body: Center(child: Text('Hata oluştu')));
+    } else {
+      final isLoggedIn = hasUser.value ?? false;
+      home = isLoggedIn ? const BasePage() : const LoginPage();
+    }
+
     return MaterialApp(
       title: 'Expense Tracker',
       theme: LightTheme.theme,
       darkTheme: DarkTheme.theme,
       themeMode: themeMode,
+      // 🔻 localization bağlamı HER ZAMAN burada
       locale: context.locale,
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
-      home: isLoggedIn ? const BasePage() : const LoginPage(),
+      home: home,
     );
   }
 }
