@@ -1,15 +1,19 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/constants/toast.dart';
 import 'package:expense_tracker/core/domain/enums/transaction_type.dart';
-import 'package:expense_tracker/core/extensions/extensions.dart';
+import 'package:expense_tracker/core/extensions/date_extensions.dart';
+import 'package:expense_tracker/core/extensions/string_extensions.dart';
+import 'package:expense_tracker/core/extensions/transaction_extensions.dart';
 import 'package:expense_tracker/features/transaction/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/transaction/widgets/transaction_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../../../core/localization/locale_keys.g.dart';
+import '../../../core/widgets/action_card.dart';
 import '../../../core/widgets/sheets/no_data_widget.dart';
 import '../providers/transaction_list_provider.dart';
-import '../widgets/transaction_card.dart';
 import 'transaction_details_page.dart';
 
 class TransactionPage extends ConsumerWidget {
@@ -32,15 +36,15 @@ class TransactionPage extends ConsumerWidget {
               children: [
                 Expanded(
                   child: GestureDetector(
-                    child: const TransactionActionCard(
-                      title: 'Gelir Ekle',
+                    child: ActionCard(
+                      title: LocaleKeys.add_income.tr().capitalizeFirst(),
                       icon: Icons.savings_rounded,
-                      bg: Color(0xFF7E57C2),
+                      bg: const Color(0xFF7E57C2),
                     ),
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => const TransactionDetailsPage(modeIndex: 0),
+                          builder: (_) => const TransactionDetailsPage(isEdit: 0),
                         ),
                       );
                     },
@@ -49,15 +53,15 @@ class TransactionPage extends ConsumerWidget {
                 const Padding(padding: EdgeInsets.only(left: 12)),
                 Expanded(
                   child: GestureDetector(
-                    child: const TransactionActionCard(
-                      title: 'Gider Ekle',
+                    child: ActionCard(
+                      title: LocaleKeys.add_expense.tr().capitalizeFirst(),
                       icon: Icons.shopping_bag_rounded,
-                      bg: Color(0xFFF57C00),
+                      bg: const Color(0xFFF57C00),
                     ),
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => const TransactionDetailsPage(modeIndex: 1),
+                          builder: (_) => const TransactionDetailsPage(isEdit: 1),
                         ),
                       );
                     },
@@ -66,11 +70,11 @@ class TransactionPage extends ConsumerWidget {
               ],
             ),
 
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 8),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 8),
               child: Text(
-                'Son Eklenenler',
-                style: TextStyle(
+                LocaleKeys.recent_added.tr().capitalizeFirst(),
+                style: const TextStyle(
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -105,7 +109,7 @@ class TransactionPage extends ConsumerWidget {
                       child: TransactionListItem(
                         title: transaction.category.label,
                         dateText: transaction.date.formatAsDMY(),
-                        amountText: transaction.amount.toString(),
+                        amountText: transaction.uiPrice(ref),
                         isIncome: transaction.category.type == TransactionType.income,
                         icon: transaction.category.icon,
                         iconBg: transaction.category.color,
@@ -115,7 +119,7 @@ class TransactionPage extends ConsumerWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => const TransactionDetailsPage(
-                              modeIndex: 2,
+                              isEdit: 2,
                             ),
                           ),
                         );

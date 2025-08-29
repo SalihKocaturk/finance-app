@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class TransactionActionCard extends StatelessWidget {
+class ActionCard extends StatelessWidget {
   final String title;
-  final IconData icon;
+  final IconData? icon;
+  final int? count;
   final Color bg;
   final VoidCallback? onTap;
 
-  const TransactionActionCard({
+  const ActionCard({
     super.key,
     required this.title,
-    required this.icon,
+    this.icon,
+    this.count,
     required this.bg,
     this.onTap,
   });
@@ -28,14 +30,24 @@ class TransactionActionCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: bg,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: Colors.white),
-            ),
+            icon != null
+                ? Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: bg,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(icon, color: Colors.white),
+                  )
+                : Text(
+                    (count ?? 0).toString(),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+
             const Gap(10),
             Text(
               title,

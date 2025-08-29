@@ -1,7 +1,7 @@
 import 'package:expense_tracker/core/services/image_picker_service.dart';
 import 'package:expense_tracker/core/widgets/custom_button.dart';
 import 'package:expense_tracker/core/widgets/sheets/image_picker_sheet.dart';
-import 'package:expense_tracker/features/profile/providers/form_providers.dart';
+import 'package:expense_tracker/features/settings/providers/form_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../home/pages/home_page.dart';
-import '../profile/pages/profile_page.dart';
+import '../settings/pages/settings_page.dart';
 import '../transaction/pages/transaction_page.dart';
 import 'providers/bottom_nav_provider.dart';
 
@@ -20,7 +20,7 @@ class BasePage extends ConsumerWidget {
       TransactionPage(),
       StatisticsPage(),
 
-      ProfilePage(),
+      SettingsPage(),
     ];
 
     return Scaffold(

@@ -1,6 +1,12 @@
-import 'package:expense_tracker/core/extensions/extensions.dart';
+// i18n
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker/core/extensions/balance_extensions.dart';
+import 'package:expense_tracker/core/extensions/date_extensions.dart';
+import 'package:expense_tracker/core/extensions/string_extensions.dart';
+import 'package:expense_tracker/core/extensions/transaction_extensions.dart';
+import 'package:expense_tracker/core/localization/locale_keys.g.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/widgets/sheets/no_data_widget.dart';
-import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
 import 'package:expense_tracker/features/home/providers/balance_provider.dart';
 import 'package:expense_tracker/features/home/widgets/total_balance_card.dart';
 import 'package:expense_tracker/features/transaction/providers/transaction_list_provider.dart';
@@ -9,64 +15,109 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../../../core/domain/enums/transaction_currency.dart';
 import '../../../core/domain/enums/transaction_type.dart';
+import '../../../core/services/currency_service.dart';
+import '../../../core/storage/currency_storage.dart';
+import '../../../core/widgets/upper_pop_up.dart';
 import '../../base/providers/bottom_nav_provider.dart';
 import '../../transaction/pages/transaction_details_page.dart';
 import '../../transaction/widgets/transaction_list_item.dart';
+import '../widgets/currency_row.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authNotifier = ref.watch(authProvider.notifier);
     final balance = ref.watch(balanceProvider);
     final transactionList = ref.watch(transactionListProvider);
-
+    final t = ref.watch(currencyTypeProvider);
+    final currencyType = ref.watch(currencyTypeProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home"),
+        title: Text(LocaleKeys.home.tr().capitalizeFirst()),
         leadingWidth: 120,
-        // leading: Row(
-        //   children: [
-        //     Padding(
-        //       padding: const EdgeInsets.only(left: 12.0),
-        //       child: Container(
-        //         decoration: BoxDecoration(
-        //           color: Colors.black.withAlpha(20),
-        //           borderRadius: BorderRadius.circular(12),
-        //         ),
-        //         child: IconButton(
-        //           icon: const Icon(Icons.menu),
-        //           color: Colors.black,
-        //           onPressed: () {},
-        //           padding: const EdgeInsets.all(4.0),
-        //           iconSize: 23,
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
+
         actions: [
-          // Padding(
-          //   padding: const EdgeInsets.only(right: 12.0),
-          //   child: Container(
-          //     decoration: BoxDecoration(
-          //       color: Colors.black.withAlpha(20),
-          //       borderRadius: BorderRadius.circular(12),
-          //     ),
-          //     child: IconButton(
-          //       onPressed: () async {
-          //         await authNotifier.logOut();
-          //       },
-          //       icon: const Icon(Icons.notifications),
-          //       color: Colors.black,
-          //       padding: const EdgeInsets.all(4.0),
-          //       iconSize: 23,
-          //     ),
-          //   ),
-          // ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: UpperPopup<CurrencyType>(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 10,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CurrencyRow(
+                      symbol: t == CurrencyType.tl ? '₺' : (t == CurrencyType.usd ? '\$' : '€'),
+                      label: t == CurrencyType.tl ? 'TRY' : (t == CurrencyType.usd ? 'USD' : 'EUR'),
+                    ),
+                    const Gap(4),
+                    const Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 18,
+                    ),
+                  ],
+                ),
+              ),
+              itemBuilder: (_) => const [
+                PopupMenuItem(
+                  value: CurrencyType.tl,
+                  child: CurrencyRow(symbol: '₺', label: 'TRY (₺)'),
+                ),
+                PopupMenuItem(
+                  value: CurrencyType.usd,
+                  child: CurrencyRow(symbol: '\$', label: 'USD (\$)'),
+                ),
+                PopupMenuItem(
+                  value: CurrencyType.eur,
+                  child: CurrencyRow(symbol: '€', label: 'EUR (€)'),
+                ),
+              ],
+              onSelected: (selected) async {
+                ref.read(currencyTypeProvider.notifier).state = selected;
+
+                if (selected == CurrencyType.tl) {
+                  ref.read(currencyRateProvider.notifier).state = 1.0;
+                  CurrencyStorage().writeCurrency(CurrencyType.tl);
+                  return;
+                }
+                if (selected == CurrencyType.usd) {
+                  final r = await CurrencyService().getUsdRate();
+                  ref.read(currencyRateProvider.notifier).state = r;
+                  CurrencyStorage().writeCurrency(CurrencyType.usd);
+                  return;
+                }
+                if (selected == CurrencyType.eur) {
+                  final r = await CurrencyService().getEurRate();
+                  ref.read(currencyRateProvider.notifier).state = r;
+                  CurrencyStorage().writeCurrency(CurrencyType.eur);
+                }
+              },
+            ),
+          ),
         ],
+
+        // Padding(
+        //   padding: const EdgeInsets.only(right: 19.0),
+        //   child: CustomAppbarButton(
+        //     icon: Icons.recycling,
+        //     onTap: () async {
+        //       if (currencyType == CurrencyType.usd) {
+        //         ref.read(currencyTypeProvider.notifier).state = CurrencyType.tl;
+        //         ref.read(currencyRateProvider.notifier).state = 1;
+        //         CurrencyStorage().writeCurrency(CurrencyType.tl);
+        //       } else {
+        //         ref.read(currencyTypeProvider.notifier).state = CurrencyType.usd;
+        //         ref.read(currencyRateProvider.notifier).state = await CurrencyService().getUsdRate();
+        //         CurrencyStorage().writeCurrency(CurrencyType.usd);
+        //       }
+        //     },
+        //   ),
+        // ),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
@@ -75,9 +126,12 @@ class HomePage extends ConsumerWidget {
           children: [
             const SizedBox(height: 20),
             TotalBalanceCard(
-              balance: balance.balance.toString(),
-              income: balance.income.toString(),
-              expenses: balance.expense.toString(),
+              balance:
+                  "${(balance.uiBalance(ref))} ${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}",
+              income:
+                  "${(balance.uiIncome(ref))} ${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}",
+              expenses:
+                  "${(balance.uiExpense(ref))} ${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}",
             ),
             const Gap(20),
             Padding(
@@ -85,15 +139,15 @@ class HomePage extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Transactions",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Text(
+                    LocaleKeys.transactions.tr().capitalizeFirst(),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   if (transactionList.isNotEmpty)
                     TextButton(
-                      child: const Text(
-                        "See All",
-                        style: TextStyle(color: Colors.grey),
+                      child: Text(
+                        LocaleKeys.see_all.tr().capitalizeFirst(),
+                        style: const TextStyle(color: Colors.grey),
                       ),
                       onPressed: () {
                         ref.read(bottomNavProvider.notifier).state = 1;
@@ -108,12 +162,12 @@ class HomePage extends ConsumerWidget {
                 child: ListView.builder(
                   itemCount: transactionList.length < 10 ? transactionList.length : 10,
                   itemBuilder: (context, index) {
-                    var transaction = transactionList[index];
+                    final transaction = transactionList[index];
                     return GestureDetector(
                       child: TransactionListItem(
-                        title: transaction.category.label,
+                        title: transaction.category.label.capitalizeFirst(),
                         dateText: transaction.date.formatAsDMY(),
-                        amountText: transaction.amount.toString(),
+                        amountText: (transaction.uiPrice(ref)),
                         isIncome: transaction.category.type == TransactionType.income,
                         icon: transaction.category.icon,
                         iconBg: transaction.category.color,
@@ -122,7 +176,7 @@ class HomePage extends ConsumerWidget {
                         ref.read(transactionProvider.notifier).setTransaction(transaction);
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => const TransactionDetailsPage(modeIndex: 2),
+                            builder: (_) => const TransactionDetailsPage(isEdit: 2),
                           ),
                         );
                       },

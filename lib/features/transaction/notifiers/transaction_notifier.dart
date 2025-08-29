@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/domain/entities/transaction_categories.dart';
+import 'package:expense_tracker/core/domain/enums/transaction_currency.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/domain/models/transaction.dart';
@@ -12,6 +13,7 @@ class TransactionNotifier extends Notifier<Transaction> {
       amount: 0,
       date: DateTime.now(),
       details: '',
+      transactionCurrency: CurrencyType.tl,
     );
   }
 

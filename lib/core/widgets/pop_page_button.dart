@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
 
-class PopPageButton extends StatelessWidget {
-  final VoidCallback onTap;
-  const PopPageButton({super.key, required this.onTap});
+class CustomAppbarButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  final IconData icon;
+  const CustomAppbarButton({super.key, this.icon = Icons.arrow_back, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey.withAlpha(60),
+          color: Theme.of(context).colorScheme.onSurface.withAlpha(35),
           borderRadius: BorderRadius.circular(12),
         ),
-        padding: const EdgeInsets.all(8),
-        child: const Icon(
-          Icons.arrow_back,
+        child: IconButton(
+          icon: Icon(icon),
           color: Colors.black,
+          onPressed: () {
+            if (onTap != null) {
+              onTap!();
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+          padding: const EdgeInsets.all(4.0),
+          iconSize: 23,
         ),
       ),
     );

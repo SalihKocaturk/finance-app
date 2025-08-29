@@ -1,24 +1,23 @@
-import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-part 'user.g.dart';
-
-@HiveType(typeId: 32)
-class User extends HiveObject {
-  @HiveField(0)
+class User {
   final String id;
-
-  @HiveField(1)
   final String name;
-
-  @HiveField(2)
   final String email;
 
-  User({
-    String? id,
-    required this.name,
-    required this.email,
-  }) : id = id ?? const Uuid().v4();
+  User({String? id, required this.name, required this.email}) : id = id ?? const Uuid().v4();
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'email': email,
+  };
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+    id: json['id'] as String?,
+    name: json['name'] as String,
+    email: json['email'] as String,
+  );
 
   @override
   String toString() => 'User{id: $id, name: $name, email: $email}';

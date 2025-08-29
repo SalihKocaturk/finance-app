@@ -1,3 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker/core/extensions/string_extensions.dart';
+import 'package:expense_tracker/core/localization/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 
 import 'blurred_icon_circle.dart';
@@ -32,9 +35,9 @@ class TotalBalanceCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text(
-                "Balance",
-                style: TextStyle(
+              Text(
+                LocaleKeys.balance.tr().capitalizeFirst(),
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -56,7 +59,7 @@ class TotalBalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            "$balance₺",
+            balance,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 32,
@@ -76,16 +79,16 @@ class TotalBalanceCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Income",
-                      style: TextStyle(
+                    Text(
+                      LocaleKeys.income.tr().capitalizeFirst(),
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     Text(
-                      "$income₺",
+                      income,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -103,16 +106,16 @@ class TotalBalanceCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Expenses",
-                      style: TextStyle(
+                    Text(
+                      LocaleKeys.expenses.tr().capitalizeFirst(),
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     Text(
-                      "$expenses₺",
+                      expenses,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,

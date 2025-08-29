@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../profile/widgets/custom_icon_circle.dart';
+import '../../settings/widgets/custom_icon_circle.dart';
 
 class TransactionListItem extends StatelessWidget {
   final String title;

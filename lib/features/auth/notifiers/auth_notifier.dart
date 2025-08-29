@@ -1,14 +1,14 @@
+import 'package:expense_tracker/core/storage/user_storage.dart';
 import 'package:expense_tracker/features/auth/firebase_auth/firebase_auth_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/toast.dart';
-import '../../../core/repositories/user_repository.dart';
 import '../models/user.dart';
 import '../providers/auth_form_providers.dart';
 import '../providers/user_provider.dart';
 
 class AuthNotifier extends Notifier<User> {
-  final userRepository = UserRepository();
+  final userStorage = UserStorage();
   final authService = FirebaseAuthService();
   @override
   User build() => User(
@@ -24,7 +24,7 @@ class AuthNotifier extends Notifier<User> {
       showToast("Kayıt başarılı.");
 
       state = user;
-      await userRepository.setUser(state);
+      await userStorage.set(state);
       ref.invalidate(hasUserProvider);
     } else {}
   }
@@ -40,7 +40,7 @@ class AuthNotifier extends Notifier<User> {
       final user = await authService.signUpWithEmailAndPassword(email: email, password: password, name: name);
       if (user != null) {
         state = user;
-        await userRepository.setUser(state);
+        await userStorage.set(state);
         ref.invalidate(hasUserProvider);
       } else {
         showToast("Kayıt başarısız.");
@@ -49,7 +49,7 @@ class AuthNotifier extends Notifier<User> {
   }
 
   Future<void> logOut() async {
-    await userRepository.removeUser();
+    await userStorage.delete();
     ref.invalidate(hasUserProvider);
     ref.invalidate(userProvider);
   }

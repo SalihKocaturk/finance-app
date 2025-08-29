@@ -15,7 +15,7 @@ class BalanceNotifier extends Notifier<Balance> {
   Balance _calcBalance(List<Transaction> transactions) {
     double income = 0, expense = 0;
     for (final t in transactions) {
-      final isIncome = (t.category.type == TransactionType.income) || t.amount >= 0;
+      final isIncome = (t.category.type == TransactionType.income);
       if (isIncome) {
         income += t.amount;
       } else {

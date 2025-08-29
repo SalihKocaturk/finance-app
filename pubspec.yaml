@@ -59,6 +59,7 @@ dependencies:
   device_info_plus: ^9.1.2
   google_fonts: 
   shared_preferences:
+  easy_localization: ^3.0.8
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -77,6 +78,7 @@ dev_dependencies:
 flutter:
   assets: 
     - 'assets/images/'
+    - assets/translations/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

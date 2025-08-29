@@ -22,6 +22,7 @@ abstract final class DarkTheme {
         seedColor: const Color(0xFF7F00FF),
         brightness: Brightness.dark,
       ),
+
       scaffoldBackgroundColor: const Color(0xFF121212),
       textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
       appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),

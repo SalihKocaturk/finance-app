@@ -60,23 +60,10 @@ class CustomDateField extends StatelessWidget {
           floatingLabelBehavior: FloatingLabelBehavior.always,
           label: Text(label),
           filled: true,
-          fillColor: const Color(0xFFFCFCFC),
           hintText: hint,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFDBDFE9)),
           ),
         ),
         child: Text(

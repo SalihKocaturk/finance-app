@@ -1,29 +1,18 @@
-// lib/core/domain/models/transaction_category.dart
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 
 import '../enums/transaction_type.dart';
 
-part 'transaction_category.g.dart';
-
-@HiveType(typeId: 4)
 class TransactionCategory {
-  @HiveField(0)
   final int id;
 
-  @HiveField(1)
   final String label;
 
-  @HiveField(2)
   final int iconCodePoint;
 
-  @HiveField(3)
   final String? iconFontFamily;
 
-  @HiveField(4)
   final Color color;
 
-  @HiveField(5)
   final TransactionType type;
 
   const TransactionCategory({
