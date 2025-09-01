@@ -26,6 +26,19 @@ class TransactionListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CustomIconCircle(icon: icon, bgColor: iconBg),
+      // leading: Container(
+      //   width: 40,
+      //   height: 40,
+      //   decoration: BoxDecoration(
+      //     color: iconBg.withAlpha(15),
+      //     shape: BoxShape.circle,
+      //   ),
+      //   child: Icon(
+      //     icon,
+      //     color: iconBg,
+      //     size: 22,
+      //   ),
+      // ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(dateText),
       trailing: Text(

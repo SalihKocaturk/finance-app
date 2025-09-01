@@ -52,6 +52,26 @@ abstract final class DarkTheme {
         indicatorColor: const Color(0x207F00FF),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: const Color(0xFF1E1E1E),
+        surfaceTintColor: Colors.transparent,
+        elevation: 10,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        titleTextStyle: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
+        contentTextStyle: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: Color(0xFFE0E0E0),
+          height: 1.4,
+          letterSpacing: 0.2,
+        ),
+      ),
     );
   }
 }

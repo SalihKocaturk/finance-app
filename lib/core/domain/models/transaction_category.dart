@@ -24,7 +24,7 @@ class TransactionCategory {
     required this.type,
   });
 
-  factory TransactionCategory.fromIcon({
+  factory TransactionCategory.rename({
     required int id,
     required String label,
     required IconData icon,

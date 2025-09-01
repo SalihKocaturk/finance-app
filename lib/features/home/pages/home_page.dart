@@ -37,8 +37,6 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(LocaleKeys.home.tr().capitalizeFirst()),
-        leadingWidth: 120,
-
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -48,6 +46,7 @@ class HomePage extends ConsumerWidget {
                   horizontal: 10,
                   vertical: 10,
                 ),
+
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -100,24 +99,6 @@ class HomePage extends ConsumerWidget {
             ),
           ),
         ],
-
-        // Padding(
-        //   padding: const EdgeInsets.only(right: 19.0),
-        //   child: CustomAppbarButton(
-        //     icon: Icons.recycling,
-        //     onTap: () async {
-        //       if (currencyType == CurrencyType.usd) {
-        //         ref.read(currencyTypeProvider.notifier).state = CurrencyType.tl;
-        //         ref.read(currencyRateProvider.notifier).state = 1;
-        //         CurrencyStorage().writeCurrency(CurrencyType.tl);
-        //       } else {
-        //         ref.read(currencyTypeProvider.notifier).state = CurrencyType.usd;
-        //         ref.read(currencyRateProvider.notifier).state = await CurrencyService().getUsdRate();
-        //         CurrencyStorage().writeCurrency(CurrencyType.usd);
-        //       }
-        //     },
-        //   ),
-        // ),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),

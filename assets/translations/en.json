@@ -9,6 +9,10 @@
     "transaction": "transaction",
     "add_income": "add income",
     "add_expense": "add expense",
+    "add": "add",
+    "cancel": "cancel",
+    "delete": "delete",
+    "deleted": "deleted",
     "recent_added": "recently added",
     "lastly_added": "lastly added",
     "statistics": "statistics",
@@ -34,5 +38,7 @@
     "language": "language",
     "choose_language": "choose language",
     "no_data": "no data",
-    "no_transactions_found": "no transactions found"
+    "no_transactions_found": "no transactions found",
+    "enter_valid_number": "please enter a valid number",
+    "new_category": "new category"
 }

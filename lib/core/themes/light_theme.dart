@@ -49,6 +49,28 @@ abstract final class LightTheme {
         indicatorColor: const Color(0x207F00FF),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
+      dialogTheme: const DialogThemeData(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+        titleTextStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: Colors.black,
+          fontFamily: 'Poppins',
+        ),
+        contentTextStyle: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: Color(0xFF333333),
+          height: 1.4,
+          letterSpacing: 0.2,
+          fontFamily: 'Poppins',
+        ),
+      ),
     );
   }
 }

@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../../core/domain/entities/transaction_categories.dart';
-import '../../../core/domain/enums/transaction_type.dart'; // TransactionType enum dosyan
+import '../../../core/domain/enums/transaction_type.dart';
 import '../../../core/domain/models/transaction_category.dart';
 
 class CategoryDropdownField extends StatelessWidget {
   final String label;
   final String hint;
-  final int modeIndex; // 0: gelir, 1: gider, 2: tümü
+  final TransactionType? filterType;
   final IconData? leadingIcon;
   final TransactionCategory? value;
+  final List<TransactionCategory> transactionCategories;
   final ValueChanged<TransactionCategory?>? onChanged;
 
   const CategoryDropdownField({
     super.key,
     required this.label,
     required this.hint,
-    required this.modeIndex,
+    this.filterType,
     this.leadingIcon,
     this.value,
+    required this.transactionCategories,
     this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    final filtered = transactionCategories.where((transaction) {
-      if (modeIndex == 0) return transaction.type == TransactionType.income;
-      if (modeIndex == 1) return transaction.type == TransactionType.expense;
-      return true;
-    }).toList();
-    //önceden riverpodda kalan değer listede bulunmöadıgından dolayı hata alınıyor bundan dolayı safevalueeya çekiyoruz
+    final filtered = filterType == null
+        ? transactionCategories
+        : transactionCategories.where((transaction) => transaction.type == filterType).toList();
+
     final safeValue = (value != null && filtered.contains(value)) ? value : null;
 
     final items = filtered.map((transaction) {
@@ -52,7 +51,10 @@ class CategoryDropdownField extends StatelessWidget {
       isExpanded: true,
       onChanged: onChanged,
       icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey.withAlpha(180)),
-      hint: Text(hint, style: const TextStyle(color: Color(0xFF999999), fontSize: 15)),
+      hint: Text(
+        hint,
+        style: const TextStyle(color: Color(0xFF999999), fontSize: 15),
+      ),
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.always,
         label: Text(label),

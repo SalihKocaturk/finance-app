@@ -9,4 +9,4 @@ final transactionCategoriesProvider = NotifierProvider<TransactionCategoriesNoti
 );
 final categoryNameProvider = StateProvider.autoDispose<String>((ref) => "");
 
-final categoryTypeProvider = StateProvider.autoDispose<TransactionType>((ref) => TransactionType.expense);
+final transactionTypeProvider = StateProvider<TransactionType?>((ref) => null);

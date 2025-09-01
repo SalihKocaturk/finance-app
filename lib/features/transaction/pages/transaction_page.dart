@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/domain/enums/transaction_type.dart';
 import 'package:expense_tracker/core/extensions/date_extensions.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
 import 'package:expense_tracker/core/extensions/transaction_extensions.dart';
+import 'package:expense_tracker/features/transaction/providers/transaction_category_provider.dart';
 import 'package:expense_tracker/features/transaction/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/transaction/widgets/transaction_list_item.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class TransactionPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("İşlemler"),
+        title: Text(LocaleKeys.transactions.tr().capitalizeFirst()),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -42,6 +43,7 @@ class TransactionPage extends ConsumerWidget {
                       bg: const Color(0xFF7E57C2),
                     ),
                     onTap: () {
+                      ref.read(transactionTypeProvider.notifier).state = TransactionType.income;
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => const TransactionDetailsPage(isEdit: 0),
@@ -59,6 +61,8 @@ class TransactionPage extends ConsumerWidget {
                       bg: const Color(0xFFF57C00),
                     ),
                     onTap: () {
+                      ref.read(transactionTypeProvider.notifier).state = TransactionType.expense;
+
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => const TransactionDetailsPage(isEdit: 1),
@@ -95,13 +99,13 @@ class TransactionPage extends ConsumerWidget {
                         SlidableAction(
                           onPressed: (_) {
                             transactionListNotifier.delete(transaction.id);
-                            showToast('${transaction.category.label} silindi');
+                            showToast('${transaction.category.label} ${LocaleKeys.deleted.tr().capitalizeFirst()}');
                           },
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
 
                           icon: Icons.delete,
-                          label: 'Sil',
+                          label: LocaleKeys.delete.tr().capitalizeFirst(),
                         ),
                       ],
                     ),

@@ -9,6 +9,10 @@
     "transaction": "işlem",
     "add_income": "gelir ekle",
     "add_expense": "gider ekle",
+    "add": "ekle",
+    "cancel": "iptal",
+    "delete": "sil",
+    "deleted": "silindi",
     "recent_added": "son eklenenler",
     "lastly_added": "en son eklenen",
     "statistics": "istatistikler",
@@ -34,5 +38,7 @@
     "language": "dil",
     "choose_language": "uygulama dilini seç",
     "no_data": "veri yok",
-    "no_transactions_found": "işlem bulunamadı"
+    "no_transactions_found": "işlem bulunamadı",
+    "enter_valid_number": "Lütfen geçerli bir sayı giriniz",
+    "new_category": "yeni kategori"
 }

@@ -17,6 +17,7 @@ class StatisticsPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
               children: [
@@ -30,7 +31,7 @@ class StatisticsPage extends StatelessWidget {
                     onTap: () {},
                   ),
                 ),
-                const Padding(padding: EdgeInsets.only(left: 12)),
+                const SizedBox(width: 12),
                 Expanded(
                   child: GestureDetector(
                     child: ActionCard(
@@ -38,12 +39,12 @@ class StatisticsPage extends StatelessWidget {
                       bg: const Color(0xFFF57C00),
                       count: 22,
                     ),
-
                     onTap: () {},
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 24),
           ],
         ),
       ),

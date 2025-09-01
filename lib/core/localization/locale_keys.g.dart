@@ -13,6 +13,10 @@ abstract class  LocaleKeys {
   static const transaction = 'transaction';
   static const add_income = 'add_income';
   static const add_expense = 'add_expense';
+  static const add = 'add';
+  static const cancel = 'cancel';
+  static const delete = 'delete';
+  static const deleted = 'deleted';
   static const recent_added = 'recent_added';
   static const lastly_added = 'lastly_added';
   static const statistics = 'statistics';
@@ -39,5 +43,7 @@ abstract class  LocaleKeys {
   static const choose_language = 'choose_language';
   static const no_data = 'no_data';
   static const no_transactions_found = 'no_transactions_found';
+  static const enter_valid_number = 'enter_valid_number';
+  static const new_category = 'new_category';
 
 }

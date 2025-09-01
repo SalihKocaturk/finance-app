@@ -44,88 +44,111 @@ class TotalBalanceCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              const Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.white,
-                size: 22,
-              ),
+              const Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 22),
               const Spacer(),
-              Icon(
-                Icons.more_vert,
-                color: Colors.white.withAlpha(30),
-                size: 22,
-              ),
+              Icon(Icons.more_vert, color: Colors.white.withAlpha(30), size: 22),
             ],
           ),
+
           const SizedBox(height: 10),
+
           Text(
             balance,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 32,
               fontWeight: FontWeight.bold,
             ),
           ),
+
           const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: Row(
-              children: [
-                const BlurredIconCircle(
-                  icon: Icons.arrow_downward,
-                  iconColor: Colors.white,
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+
+          Row(
+            children: [
+              Expanded(
+                child: Row(
                   children: [
-                    Text(
-                      LocaleKeys.income.tr().capitalizeFirst(),
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    const BlurredIconCircle(
+                      icon: Icons.arrow_downward,
+                      iconColor: Colors.white,
                     ),
-                    Text(
-                      income,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            LocaleKeys.income.tr().capitalizeFirst(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Text(
+                            income,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                const Spacer(),
-                const BlurredIconCircle(
-                  icon: Icons.arrow_upward,
-                  iconColor: Colors.white,
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+
+              const SizedBox(width: 12),
+
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      LocaleKeys.expenses.tr().capitalizeFirst(),
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    const BlurredIconCircle(
+                      icon: Icons.arrow_upward,
+                      iconColor: Colors.white,
                     ),
-                    Text(
-                      expenses,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            LocaleKeys.expenses.tr().capitalizeFirst(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Text(
+                            expenses,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

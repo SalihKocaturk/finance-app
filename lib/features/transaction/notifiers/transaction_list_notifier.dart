@@ -1,7 +1,7 @@
-import 'package:expense_tracker/core/domain/entities/transaction_categories.dart';
 import 'package:expense_tracker/core/domain/enums/transaction_currency.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/services/currency_service.dart';
+import 'package:expense_tracker/features/transaction/providers/transaction_category_provider.dart';
 import 'package:expense_tracker/features/transaction/providers/transaction_form_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +20,7 @@ class TransactionListNotifier extends Notifier<List<Transaction>> {
     final date = ref.read(dateProvider);
     final description = ref.read(descriptionProvider);
     final currencyType = ref.read(currencyTypeProvider);
-
+    final transactionCategories = ref.read(transactionCategoriesProvider);
     final usdRate = await CurrencyService().getUsdRate();
     final eurRate = await CurrencyService().getEurRate();
 

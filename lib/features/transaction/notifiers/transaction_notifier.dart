@@ -1,5 +1,5 @@
-import 'package:expense_tracker/core/domain/entities/transaction_categories.dart';
 import 'package:expense_tracker/core/domain/enums/transaction_currency.dart';
+import 'package:expense_tracker/features/transaction/providers/transaction_category_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/domain/models/transaction.dart';
@@ -8,6 +8,7 @@ import '../providers/transaction_form_providers.dart';
 class TransactionNotifier extends Notifier<Transaction> {
   @override
   Transaction build() {
+    final transactionCategories = ref.read(transactionCategoriesProvider);
     return Transaction(
       category: transactionCategories.first,
       amount: 0,

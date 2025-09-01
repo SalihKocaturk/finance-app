@@ -31,13 +31,15 @@ class TransactionDetailsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final category = ref.watch(categoryProvider);
     final date = ref.watch(dateProvider);
-    final transactionListNotifier = ref.read(transactionListProvider.notifier);
     final amount = ref.watch(amountProvider);
     final transaction = ref.read(transactionProvider);
     final currencyType = ref.read(currencyTypeProvider);
     final description = ref.watch(descriptionProvider);
-    final canSave = category != null && date != null && description != null && amount != 0.00 && amount != null;
-
+    final transactionListNotifier = ref.read(transactionListProvider.notifier);
+    final transactionCategories = ref.read(transactionCategoriesProvider);
+    final categoryName = ref.watch(categoryNameProvider);
+    final transactionType = ref.watch(transactionTypeProvider);
+    final canSave = category != null && date != null && description != null && amount != null && amount != 0.0;
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 60,
@@ -61,12 +63,12 @@ class TransactionDetailsPage extends ConsumerWidget {
             hintText: '${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}0.00',
             inputType: TextInputType.number,
             onChanged: (value) {
-              final parsedValue = double.tryParse(value);
-              if (parsedValue != null) {
-                ref.read(amountProvider.notifier).state = parsedValue;
+              final parsed = double.tryParse(value.replaceAll(',', '.'));
+              if (parsed != null) {
+                ref.read(amountProvider.notifier).state = parsed;
               } else {
-                ref.read(amountProvider.notifier).state = parsedValue;
-                showToast('Lütfen geçerli bir sayı giriniz');
+                ref.read(amountProvider.notifier).state = null;
+                showToast(LocaleKeys.enter_valid_number.tr().capitalizeFirst());
               }
             },
           ),
@@ -78,47 +80,46 @@ class TransactionDetailsPage extends ConsumerWidget {
                 child: CategoryDropdownField(
                   label: LocaleKeys.category.tr().capitalizeFirst(),
                   hint: LocaleKeys.choose_category.tr().capitalizeFirst(),
-                  modeIndex: isEdit,
+                  filterType: transactionType,
                   leadingIcon: Icons.category,
                   value: category,
+                  transactionCategories: transactionCategories,
                   onChanged: (val) => ref.read(categoryProvider.notifier).state = val,
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  // dialog açılmadan önce reset (opsiyonel)
                   ref.read(categoryNameProvider.notifier).state = "";
-                  ref.read(categoryTypeProvider.notifier).state = TransactionType.expense;
-                  final name = ref.watch(categoryNameProvider);
-                  final type = ref.watch(categoryTypeProvider);
+
                   showDialog(
                     context: context,
                     builder: (_) {
                       return CategoryDialog(
-                        title: 'Yeni Kategori',
-                        name: name,
-                        type: type,
+                        title: LocaleKeys.new_category.tr().capitalizeFirst(),
+                        name: categoryName,
+                        type: transactionType ?? TransactionType.expense,
                         onNameChanged: (v) => ref.read(categoryNameProvider.notifier).state = v,
-                        onTypeChanged: (t) => ref.read(categoryTypeProvider.notifier).state = t,
                         onCancel: () {
-                          ref.invalidate(categoryNameProvider);
-                          ref.invalidate(categoryTypeProvider);
+                          ref.invalidate(transactionTypeProvider);
                           Navigator.of(context).pop();
                         },
                         onSave: () {
-                          final trimmed = name.trim();
-                          if (trimmed.isEmpty) return;
+                          if (categoryName == "") {
+                            return;
+                          } else {
+                            final trimmed = ref.read(categoryNameProvider).trim();
+                            final currentType = ref.read(transactionTypeProvider);
+                            if (trimmed.isEmpty) return;
 
-                          final newCategory = ref
-                              .read(transactionCategoriesProvider.notifier)
-                              .add(name: trimmed, type: type);
+                            final newCategory = ref
+                                .read(transactionCategoriesProvider.notifier)
+                                .add(name: trimmed, type: currentType ?? TransactionType.expense);
 
-                          ref.read(categoryProvider.notifier).state = newCategory;
+                            ref.read(categoryProvider.notifier).state = newCategory;
 
-                          ref.invalidate(categoryNameProvider);
-                          ref.invalidate(categoryTypeProvider);
-                          Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          }
                         },
                       );
                     },
