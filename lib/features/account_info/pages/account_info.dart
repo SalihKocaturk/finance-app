@@ -1,23 +1,30 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker/core/extensions/string_extensions.dart';
+import 'package:expense_tracker/core/localization/locale_keys.g.dart';
 import 'package:expense_tracker/core/services/image_picker_service.dart';
 import 'package:expense_tracker/core/widgets/custom_button.dart';
+import 'package:expense_tracker/core/widgets/custom_date_picker.dart';
+import 'package:expense_tracker/core/widgets/custom_text_field.dart';
 import 'package:expense_tracker/core/widgets/sheets/image_picker_sheet.dart';
-import 'package:expense_tracker/features/settings/providers/form_providers.dart';
+import 'package:expense_tracker/features/account_info/providers/form_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../auth/providers/user_provider.dart';
+import '../providers/user_provider.dart';
 
-class EditProfilePage extends ConsumerWidget {
-  const EditProfilePage({super.key});
+class AccountInfo extends ConsumerWidget {
+  const AccountInfo({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userAsync = ref.watch(userProvider);
-    final u = userAsync.valueOrNull;
     final height = MediaQuery.of(context).size.height;
     final XFile? imageData = ref.watch(imageProvider);
+    final name = ref.watch(editNameProvider);
+    final email = ref.watch(editEmailProvider);
+    final birthDate = ref.watch(editBirthDateProvider);
+
     const String defaultAvatarUrl =
         'https://media.licdn.com/dms/image/v2/D4D03AQGofiGE_BrpgA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718252507739?e=1757548800&v=beta&t=IxPzkLlNsqbpmeLCKCGEeem9eU7BiuErxZ9lfjx3ovE';
 
@@ -153,11 +160,55 @@ class EditProfilePage extends ConsumerWidget {
               ),
               const Gap(10),
               const Text("Profile Photo"),
-              CustomButton(
-                color: Colors.blue,
-                icon: Icons.check,
-                text: "Save",
-                onTap: () {},
+
+              const Gap(30),
+
+              CustomTextField(
+                label: LocaleKeys.name.tr().capitalizeFirst(),
+                hintText: LocaleKeys.name.tr().capitalizeFirst(),
+                initialValue: name,
+                onChanged: (value) {
+                  ref.read(editNameProvider.notifier).state = value;
+                },
+              ),
+              const Gap(20),
+              CustomTextField(
+                label: LocaleKeys.email.tr().capitalizeFirst(),
+                hintText: LocaleKeys.email.tr().capitalizeFirst(),
+                initialValue: email,
+                onChanged: (value) {
+                  ref.read(editEmailProvider.notifier).state = value;
+                },
+              ),
+              const Gap(20),
+              CustomDateField(
+                label: LocaleKeys.date_of_birth.tr().capitalizeFirst(),
+                hintText: LocaleKeys.date_of_birth.tr().capitalizeFirst(),
+                initialValue: birthDate,
+                onChanged: (value) {
+                  ref.read(editBirthDateProvider.notifier).state = value ?? DateTime.now();
+                },
+              ),
+              const Gap(20),
+
+              //! Password değiştirme işlemi için önce password girişi yapılacak ve başka bir yerden çağırılması daha
+              // CustomTextField(
+              //   label: LocaleKeys.password.tr().capitalizeFirst(),
+              //   hintText: LocaleKeys.password.tr().capitalizeFirst(),
+              //   isPassword: true,
+              //   onChanged: (value) {},
+              // ),
+              // const Gap(20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 36.0),
+                child: CustomButton(
+                  color: Colors.blue,
+                  icon: Icons.check,
+                  text: "Save",
+                  onTap: () async {
+                    await ref.read(userProvider.notifier).save(ref);
+                  },
+                ),
               ),
             ],
           ),

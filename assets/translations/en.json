@@ -1,4 +1,12 @@
 {
+    "log_in": "login",
+    "email": "email",
+    "date_of_birth": "birth date",
+    "password": "password",
+    "confirm_password": "confirm password",
+    "continueb": "continue",
+    "sign_up": "sign up",
+    "name": "name",
     "home": "home",
     "balance": "balance",
     "income": "income",
@@ -40,5 +48,9 @@
     "no_data": "no data",
     "no_transactions_found": "no transactions found",
     "enter_valid_number": "please enter a valid number",
-    "new_category": "new category"
+    "new_category": "new category",
+    "already_have_account": "already have an account? log in",
+    "rule_min_one_upper": "at least 1 uppercase letter",
+    "rule_min_one_lower": "at least 1 lowercase letter",
+    "rule_min_length": "at least 8 characters"
 }

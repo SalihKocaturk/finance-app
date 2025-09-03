@@ -81,19 +81,19 @@ class HomePage extends ConsumerWidget {
 
                 if (selected == CurrencyType.tl) {
                   ref.read(currencyRateProvider.notifier).state = 1.0;
-                  CurrencyStorage().writeCurrency(CurrencyType.tl);
+                  CurrencyStorage().setCurrency(CurrencyType.tl);
                   return;
                 }
                 if (selected == CurrencyType.usd) {
-                  final r = await CurrencyService().getUsdRate();
-                  ref.read(currencyRateProvider.notifier).state = r;
-                  CurrencyStorage().writeCurrency(CurrencyType.usd);
+                  final rate = await CurrencyService().getUsdRate();
+                  ref.read(currencyRateProvider.notifier).state = rate;
+                  CurrencyStorage().setCurrency(CurrencyType.usd);
                   return;
                 }
                 if (selected == CurrencyType.eur) {
-                  final r = await CurrencyService().getEurRate();
-                  ref.read(currencyRateProvider.notifier).state = r;
-                  CurrencyStorage().writeCurrency(CurrencyType.eur);
+                  final rate = await CurrencyService().getEurRate();
+                  ref.read(currencyRateProvider.notifier).state = rate;
+                  CurrencyStorage().setCurrency(CurrencyType.eur);
                 }
               },
             ),

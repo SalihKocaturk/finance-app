@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/toast.dart';
 import '../models/user.dart';
 import '../providers/auth_form_providers.dart';
-import '../providers/user_provider.dart';
+import '../providers/has_user_provider.dart';
 
 class AuthNotifier extends Notifier<User> {
   final userStorage = UserStorage();
@@ -51,6 +51,6 @@ class AuthNotifier extends Notifier<User> {
   Future<void> logOut() async {
     await userStorage.delete();
     ref.invalidate(hasUserProvider);
-    ref.invalidate(userProvider);
+    // ref.invalidate(userProvider);
   }
 }

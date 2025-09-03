@@ -1,11 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker/core/extensions/string_extensions.dart';
 import 'package:expense_tracker/features/auth/pages/login_page.dart';
 import 'package:expense_tracker/features/auth/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/localization/locale_keys.g.dart';
+import '../../../core/widgets/custom_text_field.dart';
 import '../providers/auth_form_providers.dart';
 import '../providers/auth_provider.dart';
-import '../widgets/custom_text_field.dart';
 
 class RegisterPage extends ConsumerWidget {
   const RegisterPage({super.key});
@@ -13,13 +16,15 @@ class RegisterPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final password = ref.watch(registerPasswordProvider);
-    var authNotifier = ref.watch(authProvider.notifier);
+    var authNotifier = ref.read(authProvider.notifier);
 
     final hasUppercase = password.contains(RegExp(r'[A-Z]'));
     final hasLowercase = password.contains(RegExp(r'[a-z]'));
     final hasMinLength = password.length >= 8;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 50,
@@ -28,30 +33,37 @@ class RegisterPage extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              "Kayıt Ol",
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            Text(
+              LocaleKeys.sign_up.tr().capitalizeFirst(),
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
             CustomTextField(
-              hintText: "İsim",
+              label: LocaleKeys.name.tr().capitalizeFirst(),
+              hintText: LocaleKeys.name.tr().capitalizeFirst(),
               isPassword: false,
               onChanged: (val) => ref.read(registernameProvider.notifier).state = val,
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              hintText: "Email",
+              label: LocaleKeys.email.tr().capitalizeFirst(),
+              hintText: LocaleKeys.email.tr().capitalizeFirst(),
               onChanged: (val) => ref.read(registerEmailProvider.notifier).state = val,
             ),
+
             const SizedBox(height: 16),
             CustomTextField(
-              hintText: "Şifre",
+              label: LocaleKeys.password.tr().capitalizeFirst(),
+              hintText: LocaleKeys.password.tr().capitalizeFirst(),
               isPassword: true,
               onChanged: (val) => ref.read(registerPasswordProvider.notifier).state = val,
             ),
+
             const SizedBox(height: 16),
+
             CustomTextField(
-              hintText: "Yeniden Şifre",
+              label: LocaleKeys.confirm_password.tr().capitalizeFirst(),
+              hintText: LocaleKeys.confirm_password.tr().capitalizeFirst(),
               isPassword: true,
               onChanged: (val) => ref.read(registerPassword2Provider.notifier).state = val,
             ),
@@ -64,7 +76,7 @@ class RegisterPage extends ConsumerWidget {
                 onPressed: () {
                   authNotifier.register(ref);
                 },
-                title: "Devam Et",
+                title: LocaleKeys.continueb.tr().capitalizeFirst(),
               ),
             ),
 
@@ -79,9 +91,9 @@ class RegisterPage extends ConsumerWidget {
                   ),
                 );
               },
-              child: const Text(
-                "Zaten hesabın var mı? Giriş yap",
-                style: TextStyle(fontWeight: FontWeight.bold),
+              child: Text(
+                LocaleKeys.already_have_account.tr().capitalizeFirst(),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -95,18 +107,17 @@ class RegisterPage extends ConsumerWidget {
       alignment: Alignment.centerLeft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
           Text(
-            "En az 1 büyük harf",
+            LocaleKeys.rule_min_one_upper.tr(),
             style: TextStyle(color: hasUpper ? Colors.green : Colors.grey),
           ),
           Text(
-            "En az 1 küçük harf",
+            LocaleKeys.rule_min_one_lower.tr(),
             style: TextStyle(color: hasLower ? Colors.green : Colors.grey),
           ),
           Text(
-            "En az 8 karakter",
+            LocaleKeys.rule_min_length.tr(),
             style: TextStyle(color: hasLength ? Colors.green : Colors.grey),
           ),
         ],

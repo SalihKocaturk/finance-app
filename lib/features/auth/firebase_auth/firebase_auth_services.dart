@@ -7,18 +7,18 @@ import '../models/user.dart';
 class FirebaseAuthService {
   final firebase.FirebaseAuth _auth = firebase.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  //firebase instanseları tanımlıyorum
+
   Future<User?> signUpWithEmailAndPassword({
     required String email,
     required String password,
     required String name,
+    DateTime? birthDate,
   }) async {
     try {
-      firebase.UserCredential credential = await _auth.createUserWithEmailAndPassword(
+      final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-
       final mailUser = credential.user;
 
       if (mailUser != null) {
@@ -26,20 +26,24 @@ class FirebaseAuthService {
           'uid': mailUser.uid,
           'name': name,
           'email': email,
+          'birthDate': birthDate != null ? Timestamp.fromDate(birthDate) : null,
+          'imageUrl': null, // başlangıçta boş
           'createdAt': FieldValue.serverTimestamp(),
         });
       }
-      final user = User(
+
+      return User(
         id: mailUser?.uid,
         name: name,
         email: email,
-      ); // kendi olusturdugum modele gelen bilgileri isliyorum
-      return user;
+        birthDate: birthDate,
+        imageUrl: null,
+      );
     } on firebase.FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         showToast('E-mail kullanılıyor');
       } else {
-        //  hata donmeli
+        showToast('Firebase hatası: ${e.message}');
       }
       return null;
     } catch (e) {
@@ -50,31 +54,31 @@ class FirebaseAuthService {
 
   Future<User?> signInWithEmailAndPassword(String email, String password) async {
     try {
-      //user bilgileri emailden gelenler alınıyor
-      firebase.UserCredential credential = await _auth.signInWithEmailAndPassword(
+      final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-
       final firebaseUser = credential.user;
 
       if (firebaseUser != null) {
         final doc = await _firestore.collection('users').doc(firebaseUser.uid).get();
-
         if (doc.exists) {
-          final data = doc.data()!; // kendi olusturdugum modele gelen bilgileri isliyorum
-          final user = User(
-            id: data['uid'],
-            name: data['name'],
-            email: data['email'],
+          final data = doc.data()!;
+          final ts = data['birthDate'];
+          final birthDate = ts is Timestamp ? ts.toDate() : (ts is String ? DateTime.tryParse(ts) : null);
+
+          return User(
+            id: data['uid'] as String?,
+            name: data['name'] as String,
+            email: data['email'] as String,
+            birthDate: birthDate,
+            imageUrl: data['imageUrl'] as String?, // Storage URL
           );
-          return user;
         } else {
           showToast('Firestore’da kullanıcı verisi bulunamadı.');
         }
       }
     } on firebase.FirebaseAuthException catch (e) {
-      // hatalı girisleri gosterme
       if (e.code == 'user-not-found') {
         showToast('Kullanıcı bulunamadı.');
       } else if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
@@ -86,5 +90,47 @@ class FirebaseAuthService {
       showToast('Beklenmeyen hata: $e');
     }
     return null;
+  }
+
+  Future<bool> updateUserProfile({
+    required String uid,
+    String? name,
+    String? email,
+    DateTime? birthDate,
+    String? imageUrl, // Storage URL
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return false;
+
+      if (email != null && email.isNotEmpty && email != user.email) {
+        await user.verifyBeforeUpdateEmail(email);
+      }
+
+      if (name != null && name.isNotEmpty && name != (user.displayName ?? "")) {
+        await user.updateDisplayName(name);
+      }
+
+      if (imageUrl != null && imageUrl.isNotEmpty && imageUrl != (user.photoURL ?? "")) {
+        await user.updatePhotoURL(imageUrl); // Auth profiline de yaz (opsiyonel ama güzel)
+      }
+
+      final data = <String, dynamic>{};
+      if (name != null && name.isNotEmpty) data['name'] = name;
+      if (birthDate != null) data['birthDate'] = Timestamp.fromDate(birthDate);
+      if (email != null && email.isNotEmpty && email != user.email) data['email'] = email;
+      if (imageUrl != null && imageUrl.isNotEmpty) data['imageUrl'] = imageUrl;
+
+      if (data.isNotEmpty) {
+        await _firestore.collection('users').doc(uid).update(data);
+      }
+      return true;
+    } on firebase.FirebaseAuthException catch (e) {
+      showToast('Güncelleme hatası: ${e.message}');
+      return false;
+    } catch (e) {
+      showToast('Beklenmeyen hata: $e');
+      return false;
+    }
   }
 }

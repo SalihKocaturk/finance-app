@@ -132,8 +132,8 @@ class TransactionDetailsPage extends ConsumerWidget {
           const Gap(17),
           CustomDateField(
             label: LocaleKeys.date.tr().capitalizeFirst(),
-            hint: LocaleKeys.date_hint.tr().capitalizeFirst(),
-            value: date,
+            hintText: LocaleKeys.date_hint.tr().capitalizeFirst(),
+            initialValue: date,
             onChanged: (val) => ref.read(dateProvider.notifier).state = val,
           ),
           const Gap(17),

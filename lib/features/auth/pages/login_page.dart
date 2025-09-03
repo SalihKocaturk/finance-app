@@ -1,8 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker/core/extensions/string_extensions.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
 import 'package:expense_tracker/features/auth/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/localization/locale_keys.g.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../providers/auth_form_providers.dart';
 import 'register_page.dart';
@@ -27,21 +30,21 @@ class LoginPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "Giriş Yap",
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            Text(
+              LocaleKeys.log_in.tr().capitalizeFirst(),
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
             CustomTextField(
-              label: "Email",
-              hintText: "Email",
+              label: LocaleKeys.email.tr().capitalizeFirst(),
+              hintText: LocaleKeys.email.tr().capitalizeFirst(),
               onChanged: (val) => email = val,
               initialValue: email,
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              label: "Password",
-              hintText: "Password",
+              label: LocaleKeys.password.tr().capitalizeFirst(),
+              hintText: LocaleKeys.password.tr().capitalizeFirst(),
               isPassword: true,
 
               onChanged: (val) => password = val,
@@ -51,7 +54,7 @@ class LoginPage extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: CustomElevatedButton(
-                title: "Devam Et",
+                title: LocaleKeys.continueb.tr().capitalizeFirst(),
                 onPressed: () async {
                   await authNotifier.logIn(ref);
                 },
@@ -60,9 +63,9 @@ class LoginPage extends ConsumerWidget {
             const SizedBox(height: 20),
             const SizedBox(child: Divider()),
             GestureDetector(
-              child: const Text(
-                " Kayıt ol",
-                style: TextStyle(fontWeight: FontWeight.bold),
+              child: Text(
+                LocaleKeys.sign_up.tr().capitalizeFirst(),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               onTap: () {
                 Navigator.of(context).pushReplacement(

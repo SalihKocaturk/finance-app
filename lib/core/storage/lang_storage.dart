@@ -12,7 +12,7 @@ class LangStorage {
     return Locale(code);
   }
 
-  Future<void> writeLocale(Locale locale) async {
+  Future<void> setLocale(Locale locale) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setString(_key, locale.languageCode);
   }

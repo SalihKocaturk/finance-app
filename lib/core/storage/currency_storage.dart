@@ -16,7 +16,7 @@ class CurrencyStorage {
     }
   }
 
-  Future<void> writeCurrency(CurrencyType type) async {
+  Future<void> setCurrency(CurrencyType type) async {
     final sp = await SharedPreferences.getInstance();
     if (type == CurrencyType.tl) {
       await sp.setString(_key, "tl");

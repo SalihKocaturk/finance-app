@@ -3,9 +3,10 @@ import 'package:expense_tracker/core/constants/terms_and_conditions.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
 import 'package:expense_tracker/core/widgets/sheets/log_out_bottom_sheet.dart';
 import 'package:expense_tracker/core/widgets/sheets/show_paragraph_bottom_sheet.dart';
+import 'package:expense_tracker/features/account_info/pages/account_info.dart';
+import 'package:expense_tracker/features/account_info/providers/user_provider.dart';
 import 'package:expense_tracker/features/app_settings/pages/app_settings_page.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
-import 'package:expense_tracker/features/settings/pages/edit_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -76,9 +77,10 @@ class SettingsPage extends ConsumerWidget {
             icon: Icons.person_rounded,
             iconBgColor: const Color(0xFF7E57C2),
             onTap: () {
+              ref.read(userProvider.notifier).fillEditors(ref);
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => const EditProfilePage(),
+                  builder: (_) => const AccountInfo(),
                 ),
               );
             },

@@ -1,4 +1,12 @@
 {
+    "log_in": "giriş yap",
+    "email": "e-posta",
+    "date_of_birth": "doğum tarihi",
+    "password": "şifre",
+    "confirm_password": "şifreyi doğrula",
+    "continueb": "devam et",
+    "sign_up": "kayıt ol",
+    "name": "isim",
     "home": "ana sayfa",
     "balance": "bakiye",
     "income": "gelir",
@@ -40,5 +48,9 @@
     "no_data": "veri yok",
     "no_transactions_found": "işlem bulunamadı",
     "enter_valid_number": "Lütfen geçerli bir sayı giriniz",
-    "new_category": "yeni kategori"
+    "new_category": "yeni kategori",
+    "already_have_account": "zaten hesabın var mı? giriş yap",
+    "rule_min_one_upper": "en az 1 büyük harf",
+    "rule_min_one_lower": "en az 1 küçük harf",
+    "rule_min_length": "en az 8 karakter"
 }

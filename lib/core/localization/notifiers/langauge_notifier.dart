@@ -12,7 +12,7 @@ class LanguageNotifier extends Notifier<Locale> {
 
   Future<void> setLocale(BuildContext context, Locale locale) async {
     state = locale;
-    await LangStorage().writeLocale(locale);
+    await LangStorage().setLocale(locale);
     if (context.mounted) {
       await context.setLocale(locale);
     }

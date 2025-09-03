@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class CustomDateField extends StatelessWidget {
   final String label;
-  final String hint;
+  final String hintText;
   final bool readOnly;
-  final DateTime? value;
+  final DateTime? initialValue;
   final ValueChanged<DateTime?>? onChanged;
 
   const CustomDateField({
     super.key,
     required this.label,
-    required this.hint,
+    required this.hintText,
     this.readOnly = false,
-    this.value,
+    this.initialValue,
     this.onChanged,
   });
 
@@ -26,7 +26,7 @@ class CustomDateField extends StatelessWidget {
   Future<void> _openPicker(BuildContext context) async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: value ?? DateTime.now(),
+      initialDate: initialValue ?? DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
       builder: (context, child) {
@@ -48,7 +48,7 @@ class CustomDateField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = value != null ? _fmt(value!) : '';
+    final text = initialValue != null ? _fmt(initialValue!) : '';
 
     return GestureDetector(
       onTap: () => _openPicker(context),
@@ -60,7 +60,7 @@ class CustomDateField extends StatelessWidget {
           floatingLabelBehavior: FloatingLabelBehavior.always,
           label: Text(label),
           filled: true,
-          hintText: hint,
+          hintText: hintText,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,

@@ -46,7 +46,6 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 
-	<!-- Permissions -->
 	<key>NSCameraUsageDescription</key>
 	<string>Bu uygulama fotoğraf çekmek için kameraya erişim ister.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

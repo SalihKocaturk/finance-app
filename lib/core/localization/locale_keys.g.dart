@@ -3,6 +3,14 @@
 // ignore_for_file: constant_identifier_names
 
 abstract class  LocaleKeys {
+  static const log_in = 'log_in';
+  static const email = 'email';
+  static const date_of_birth = 'date_of_birth';
+  static const password = 'password';
+  static const confirm_password = 'confirm_password';
+  static const continueb = 'continueb';
+  static const sign_up = 'sign_up';
+  static const name = 'name';
   static const home = 'home';
   static const balance = 'balance';
   static const income = 'income';
@@ -45,5 +53,9 @@ abstract class  LocaleKeys {
   static const no_transactions_found = 'no_transactions_found';
   static const enter_valid_number = 'enter_valid_number';
   static const new_category = 'new_category';
+  static const already_have_account = 'already_have_account';
+  static const rule_min_one_upper = 'rule_min_one_upper';
+  static const rule_min_one_lower = 'rule_min_one_lower';
+  static const rule_min_length = 'rule_min_length';
 
 }

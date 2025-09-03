@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/themes/providers/theme_provider.dart';
 import 'features/auth/pages/login_page.dart';
-import 'features/auth/providers/user_provider.dart';
+import 'features/auth/providers/has_user_provider.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});

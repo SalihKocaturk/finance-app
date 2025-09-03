@@ -10,11 +10,11 @@ Future<String?> showParagraphBottomSheet(
 
   double? height,
 }) {
-  final h = height ?? MediaQuery.of(context).size.height * 0.8;
+  final appHeight = height ?? MediaQuery.of(context).size.height * 0.8;
 
   return showMyBottomSheet(
     context,
-    h,
+    appHeight,
     SafeArea(
       child: Column(
         children: [
