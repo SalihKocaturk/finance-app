@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
+import 'package:expense_tracker/core/storage/user_storage.dart';
+import 'package:expense_tracker/features/auth/pages/account_page.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
 import 'package:expense_tracker/features/auth/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +59,16 @@ class LoginPage extends ConsumerWidget {
                 title: LocaleKeys.continueb.tr().capitalizeFirst(),
                 onPressed: () async {
                   await authNotifier.logIn(ref);
+                  final isLoggedIn = await UserStorage().isLoggedIn();
+                  if (isLoggedIn) {
+                    if (context.mounted) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (_) => const AccountPage(),
+                        ),
+                      );
+                    }
+                  }
                 },
               ),
             ),

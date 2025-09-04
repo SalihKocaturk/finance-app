@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/themes/dark_theme.dart';
 import 'package:expense_tracker/core/themes/light_theme.dart';
+import 'package:expense_tracker/features/account_info/providers/user_provider.dart';
 import 'package:expense_tracker/features/base/base_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hasUser = ref.watch(hasUserProvider);
     final themeMode = ref.watch(themeProvider);
-
+    ref.read(userProvider.notifier).fillEditors(ref);
     Widget home;
     if (hasUser.isLoading) {
       home = const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -32,7 +33,6 @@ class App extends ConsumerWidget {
       theme: LightTheme.theme,
       darkTheme: DarkTheme.theme,
       themeMode: themeMode,
-      // 🔻 localization bağlamı HER ZAMAN burada
       locale: context.locale,
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,

@@ -9,10 +9,13 @@ import 'package:expense_tracker/features/app_settings/pages/app_settings_page.da
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../core/constants/privacy_policy.dart';
 import '../../../core/localization/locale_keys.g.dart';
+import '../../../core/services/image_picker_service.dart';
 import '../../../core/themes/providers/theme_provider.dart';
+import '../../account_info/providers/form_providers.dart';
 import '../widgets/option_tile.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -23,6 +26,17 @@ class SettingsPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final authNotifier = ref.watch(authProvider.notifier);
     final height = MediaQuery.of(context).size.height;
+    final XFile? imageData = ref.watch(imageFileProvider);
+    final name = ref.watch(editNameProvider);
+    final email = ref.watch(editEmailProvider);
+    const String fallbackUrl =
+        'https://media.licdn.com/dms/image/v2/D4D03AQGofiGE_BrpgA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718252507739?e=1757548800&v=beta&t=IxPzkLlNsqbpmeLCKCGEeem9eU7BiuErxZ9lfjx3ovE';
+    final XFile? pickedFile = ref.watch(imageFileProvider);
+    final String? networkUrl = ref.watch(imageUrlProvider);
+    final avatarImage = ImageService().getImage(
+      file: pickedFile,
+      photoUrl: (pickedFile == null ? networkUrl : null) ?? fallbackUrl,
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profil'),
@@ -34,16 +48,14 @@ class SettingsPage extends ConsumerWidget {
           Center(
             child: Column(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(
-                    'https://media.licdn.com/dms/image/v2/D4D03AQGofiGE_BrpgA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718252507739?e=1757548800&v=beta&t=IxPzkLlNsqbpmeLCKCGEeem9eU7BiuErxZ9lfjx3ovE',
-                  ),
+                  backgroundImage: avatarImage,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(
-                    'Salih Kocatürk',
+                    name,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -52,7 +64,7 @@ class SettingsPage extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 2, bottom: 12),
                   child: Text(
-                    'kocaturksalih8@gmail.com',
+                    email,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.textTheme.bodyMedium?.color?.withAlpha(60),
                     ),

@@ -1,5 +1,5 @@
+import 'package:expense_tracker/core/services/firebase_services.dart';
 import 'package:expense_tracker/core/storage/user_storage.dart';
-import 'package:expense_tracker/features/auth/firebase_auth/firebase_auth_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/toast.dart';
@@ -9,7 +9,7 @@ import '../providers/has_user_provider.dart';
 
 class AuthNotifier extends Notifier<User> {
   final userStorage = UserStorage();
-  final authService = FirebaseAuthService();
+  final authService = FirebaseService();
   @override
   User build() => User(
     name: "",
@@ -24,7 +24,7 @@ class AuthNotifier extends Notifier<User> {
       showToast("Kayıt başarılı.");
 
       state = user;
-      await userStorage.set(state);
+      await userStorage.setLoggedIn(true);
       ref.invalidate(hasUserProvider);
     } else {}
   }
@@ -40,7 +40,7 @@ class AuthNotifier extends Notifier<User> {
       final user = await authService.signUpWithEmailAndPassword(email: email, password: password, name: name);
       if (user != null) {
         state = user;
-        await userStorage.set(state);
+        await userStorage.setLoggedIn(true);
         ref.invalidate(hasUserProvider);
       } else {
         showToast("Kayıt başarısız.");
@@ -49,8 +49,10 @@ class AuthNotifier extends Notifier<User> {
   }
 
   Future<void> logOut() async {
-    await userStorage.delete();
+    await userStorage.setLoggedIn(false);
+
     ref.invalidate(hasUserProvider);
+
     // ref.invalidate(userProvider);
   }
 }

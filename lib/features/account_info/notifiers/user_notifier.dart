@@ -1,5 +1,8 @@
+import 'dart:io';
+
+import 'package:expense_tracker/core/services/firebase_services.dart';
 import 'package:expense_tracker/core/storage/user_storage.dart';
-import 'package:expense_tracker/features/auth/firebase_auth/firebase_auth_services.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -9,16 +12,17 @@ import '../../auth/models/user.dart';
 
 class UserNotifier extends AsyncNotifier<User?> {
   final userStorage = UserStorage();
-  final authService = FirebaseAuthService();
-
+  final authService = FirebaseService();
+  final storage = FirebaseStorage.instance;
   @override
   Future<User?> build() async {
-    final user = await userStorage.get();
+    final user = await FirebaseService().getUser();
+
     ref.read(editNameProvider.notifier).state = user?.name ?? "";
     ref.read(editEmailProvider.notifier).state = user?.email ?? "";
     ref.read(editBirthDateProvider.notifier).state = user?.birthDate ?? DateTime.now();
-    ref.read(imageProvider.notifier).state = XFile(user?.imageUrl ?? "");
-
+    ref.read(imageUrlProvider.notifier).state = user?.imageUrl ?? "";
+    ref.read(imageFileProvider.notifier).state = null;
     return user;
   }
 
@@ -28,7 +32,9 @@ class UserNotifier extends AsyncNotifier<User?> {
     ref.read(editNameProvider.notifier).state = user.name;
     ref.read(editEmailProvider.notifier).state = user.email;
     ref.read(editBirthDateProvider.notifier).state = user.birthDate ?? DateTime.now();
-    ref.read(imageProvider.notifier).state = XFile(user.imageUrl ?? "");
+    ref.read(imageUrlProvider.notifier).state = user.imageUrl ?? "";
+
+    ref.read(imageFileProvider.notifier).state = null;
   }
 
   Future<void> save(WidgetRef ref) async {
@@ -41,21 +47,40 @@ class UserNotifier extends AsyncNotifier<User?> {
     final newName = ref.read(editNameProvider).trim();
     final newEmail = ref.read(editEmailProvider).trim();
     final newBirthDate = ref.read(editBirthDateProvider);
-    final XFile? avatarImgFile = ref.read(imageProvider);
+    String? uploadedImageUrl;
+    final XFile? avatarImgFile = ref.read(imageFileProvider);
+    if (avatarImgFile != null && avatarImgFile.path.isNotEmpty) {
+      final file = File(avatarImgFile.path);
+      if (!file.existsSync()) {
+        showToast("Seçilen görsel bulunamadı: ${avatarImgFile.path}");
+      } else {
+        try {
+          final path = 'users/${user.id}/profile_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          final refStorage = storage.ref().child(path);
 
+          final task = await refStorage.putFile(
+            file,
+            SettableMetadata(contentType: 'image/jpeg'),
+          );
+
+          uploadedImageUrl = await task.ref.getDownloadURL();
+        } on FirebaseException catch (e) {
+          showToast('Yükleme hatası: ${e.code}');
+        } catch (e) {
+          showToast('Beklenmeyen hata: $e');
+        }
+      }
+    }
     final controlledName = newName.isNotEmpty && newName != user.name ? newName : null;
     final controlledEmail = newEmail.isNotEmpty && newEmail != user.email ? newEmail : null;
     final controlledBirth = newBirthDate != user.birthDate ? newBirthDate : null;
-    final controlledImagePath = avatarImgFile != null && avatarImgFile.path != user.imageUrl
-        ? avatarImgFile.path
-        : null;
 
     final isUpdated = await authService.updateUserProfile(
       uid: user.id,
       name: controlledName,
       email: controlledEmail,
       birthDate: controlledBirth,
-      imageUrl: controlledImagePath,
+      imageUrl: uploadedImageUrl,
     );
     if (!isUpdated) {
       showToast("Profil güncellenemedi.");
@@ -67,16 +92,19 @@ class UserNotifier extends AsyncNotifier<User?> {
       name: controlledName ?? user.name,
       email: controlledEmail ?? user.email,
       birthDate: controlledBirth ?? user.birthDate,
-      imageUrl: controlledImagePath ?? user.imageUrl,
+      imageUrl: uploadedImageUrl ?? user.imageUrl,
     );
+    ref.read(imageUrlProvider.notifier).state = updated.imageUrl ?? "";
+    ref.read(imageFileProvider.notifier).state = null;
 
     state = AsyncData(updated);
-    await userStorage.set(updated);
+
+    await userStorage.setLoggedIn(true);
     showToast("Profil güncellendi.");
   }
 
   Future<void> delete() async {
-    await userStorage.delete();
+    await userStorage.setLoggedIn(false);
     state = const AsyncData(null);
   }
 }

@@ -20,17 +20,19 @@ class AccountInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
-    final XFile? imageData = ref.watch(imageProvider);
+    final XFile? imageData = ref.watch(imageFileProvider);
     final name = ref.watch(editNameProvider);
     final email = ref.watch(editEmailProvider);
     final birthDate = ref.watch(editBirthDateProvider);
 
-    const String defaultAvatarUrl =
+    const String fallbackUrl =
         'https://media.licdn.com/dms/image/v2/D4D03AQGofiGE_BrpgA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718252507739?e=1757548800&v=beta&t=IxPzkLlNsqbpmeLCKCGEeem9eU7BiuErxZ9lfjx3ovE';
+    final XFile? pickedFile = ref.watch(imageFileProvider);
+    final String? networkUrl = ref.watch(imageUrlProvider);
 
     final avatarImage = ImageService().getImage(
-      file: imageData,
-      photoUrl: defaultAvatarUrl,
+      file: pickedFile,
+      photoUrl: (pickedFile == null ? networkUrl : null) ?? fallbackUrl,
     );
 
     return Scaffold(
@@ -80,7 +82,7 @@ class AccountInfo extends ConsumerWidget {
                         imageData != null,
                         height * 0.2,
                         onDelete: () {
-                          ref.read(imageProvider.notifier).state = null;
+                          ref.read(imageFileProvider.notifier).state = null;
                           Navigator.of(context).pop();
                         },
                         onPick: () {
@@ -92,13 +94,15 @@ class AccountInfo extends ConsumerWidget {
                             onDelete: () {},
                             onPick: () {},
                             onGallery: () async {
-                              ref.read(imageProvider.notifier).state = await ImageService().pickFromGallery(context);
+                              ref.read(imageFileProvider.notifier).state = await ImageService().pickFromGallery(
+                                context,
+                              );
                               if (context.mounted) {
                                 Navigator.of(context).pop();
                               }
                             },
                             onCamera: () async {
-                              ref.read(imageProvider.notifier).state = await ImageService().pickFromCamera(context);
+                              ref.read(imageFileProvider.notifier).state = await ImageService().pickFromCamera(context);
                               if (context.mounted) {
                                 Navigator.of(context).pop();
                               }
@@ -106,13 +110,13 @@ class AccountInfo extends ConsumerWidget {
                           );
                         },
                         onGallery: () async {
-                          ref.read(imageProvider.notifier).state = await ImageService().pickFromGallery(context);
+                          ref.read(imageFileProvider.notifier).state = await ImageService().pickFromGallery(context);
                           if (context.mounted) {
                             Navigator.of(context).pop();
                           }
                         },
                         onCamera: () async {
-                          ref.read(imageProvider.notifier).state = await ImageService().pickFromCamera(context);
+                          ref.read(imageFileProvider.notifier).state = await ImageService().pickFromCamera(context);
                           if (context.mounted) {
                             Navigator.of(context).pop();
                           }
