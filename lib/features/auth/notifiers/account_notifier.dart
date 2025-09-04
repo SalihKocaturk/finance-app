@@ -13,6 +13,7 @@ class AccountNotifier extends AsyncNotifier<Account?> {
     return null; //firebaseden gelen account olacak burada
   }
 
+  //!! burada kaldım
   Future<void> createSessionWithCurrentUser() async {
     state = const AsyncLoading();
 
