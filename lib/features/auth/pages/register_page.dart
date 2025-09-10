@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
+import 'package:expense_tracker/features/auth/pages/account_page.dart';
 import 'package:expense_tracker/features/auth/pages/login_page.dart';
 import 'package:expense_tracker/features/auth/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -73,8 +74,15 @@ class RegisterPage extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: CustomElevatedButton(
-                onPressed: () {
-                  authNotifier.register(ref);
+                onPressed: () async {
+                  await authNotifier.register(ref);
+                  if (context.mounted) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (_) => const AccountPage(),
+                      ),
+                    );
+                  }
                 },
                 title: LocaleKeys.continueb.tr().capitalizeFirst(),
               ),

@@ -3,8 +3,11 @@ import 'package:expense_tracker/core/storage/user_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/toast.dart';
+import '../../../core/domain/enums/alert_type.dart';
 import '../models/user.dart';
+import '../providers/account_provider.dart';
 import '../providers/auth_form_providers.dart';
+import '../providers/has_account_provider.dart';
 import '../providers/has_user_provider.dart';
 
 class AuthNotifier extends Notifier<User> {
@@ -15,18 +18,24 @@ class AuthNotifier extends Notifier<User> {
     name: "",
     email: "",
   );
-  //firebase islemleri
   Future<void> logIn(WidgetRef ref) async {
     final email = ref.read(loginEmailProvider);
     final password = ref.read(loginPasswordProvider);
     final user = await authService.signInWithEmailAndPassword(email, password);
     if (user != null) {
-      showToast("Kayıt başarılı.");
+      showToast(
+        "Giriş başarılı.",
+        AlertType.success,
+      );
 
       state = user;
       await userStorage.setLoggedIn(true);
       ref.invalidate(hasUserProvider);
-    } else {}
+      ref.invalidate(hasAccountProvider);
+      try {
+        await ref.read(accountProvider.notifier).getAccountSession();
+      } catch (_) {}
+    }
   }
 
   Future<void> register(WidgetRef ref) async {
@@ -35,7 +44,10 @@ class AuthNotifier extends Notifier<User> {
     final password = ref.read(registerPasswordProvider);
     final password2 = ref.read(registerPassword2Provider);
     if (password2 != password) {
-      showToast("Sifreler uyusmuyor.");
+      showToast(
+        "Sifreler uyusmuyor.",
+        AlertType.fail,
+      );
     } else {
       final user = await authService.signUpWithEmailAndPassword(email: email, password: password, name: name);
       if (user != null) {
@@ -43,7 +55,10 @@ class AuthNotifier extends Notifier<User> {
         await userStorage.setLoggedIn(true);
         ref.invalidate(hasUserProvider);
       } else {
-        showToast("Kayıt başarısız.");
+        showToast(
+          "Kayıt başarısız.",
+          AlertType.fail,
+        );
       }
     }
   }

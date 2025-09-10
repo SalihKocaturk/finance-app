@@ -18,8 +18,9 @@ class Account extends Equatable {
     this.transactions,
     int? shareId,
   }) : shareId = shareId ?? Random().nextInt(1000000);
+
   double get totalIncome => (transactions ?? [])
-      .where((transaction) => transaction.category.type == TransactionType.income)
+      .where((t) => t.category.type == TransactionType.income)
       .fold(0.0, (sum, t) => sum + t.amount);
 
   double get totalExpense => (transactions ?? [])
@@ -27,10 +28,14 @@ class Account extends Equatable {
       .fold(0.0, (sum, t) => sum + t.amount);
 
   int get countIncome => (transactions ?? []).where((t) => t.category.type == TransactionType.income).length;
-
   int get countExpense => (transactions ?? []).where((t) => t.category.type == TransactionType.expense).length;
-
   double get netBalance => totalIncome - totalExpense;
+
   @override
-  List<Object?> get props => [id, accounts, transactions, shareId];
+  List<Object?> get props => [
+    id,
+    accounts,
+    transactions,
+    shareId,
+  ];
 }

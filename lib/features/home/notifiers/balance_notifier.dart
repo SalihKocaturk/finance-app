@@ -9,7 +9,7 @@ class BalanceNotifier extends Notifier<Balance> {
   @override
   Balance build() {
     final transactions = ref.watch(transactionListProvider);
-    return _calcBalance(transactions);
+    return _calcBalance(transactions.value ?? []);
   }
 
   Balance _calcBalance(List<Transaction> transactions) {

@@ -52,5 +52,20 @@
     "already_have_account": "already have an account? log in",
     "rule_min_one_upper": "at least 1 uppercase letter",
     "rule_min_one_lower": "at least 1 lowercase letter",
-    "rule_min_length": "at least 8 characters"
+    "rule_min_length": "at least 8 characters",
+    "login_success": "Login successful.",
+    "account_success_title": "Congrats, your account is ready.",
+    "account_success_subtitle": "Invite your team with this share code.",
+    "share_code_label": "Share code",
+    "share_code_copied": "Share code copied",
+    "go_home": "Go to Home",
+    "account_info_not_found": "account info not found.",
+    "leave_account": "leave account",
+    "close_account": "close account",
+    "account_actions_title": "account actions",
+    "account_actions_desc": "you can create an account or join an existing one.",
+    "create_account": "create account",
+    "join_account": "join account",
+    "invalid_share_code": "share code could not be parsed.",
+    "account": "account"
 }

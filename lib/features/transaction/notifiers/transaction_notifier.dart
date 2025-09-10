@@ -18,8 +18,8 @@ class TransactionNotifier extends Notifier<Transaction> {
     );
   }
 
-  Future<void> setTransaction(Transaction t) async {
-    state = t;
+  Future<void> setTransaction(Transaction transation) async {
+    state = transation;
     ref.read(descriptionProvider.notifier).state = state.details;
     ref.read(categoryProvider.notifier).state = state.category;
     ref.read(amountProvider.notifier).state = state.amount;

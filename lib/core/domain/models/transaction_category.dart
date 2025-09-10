@@ -4,15 +4,10 @@ import '../enums/transaction_type.dart';
 
 class TransactionCategory {
   final int id;
-
   final String label;
-
   final int iconCodePoint;
-
   final String? iconFontFamily;
-
   final Color color;
-
   final TransactionType type;
 
   const TransactionCategory({
@@ -42,4 +37,29 @@ class TransactionCategory {
   }
 
   IconData get icon => IconData(iconCodePoint, fontFamily: iconFontFamily);
+
+  factory TransactionCategory.fromJson(Map<String, dynamic> json) {
+    return TransactionCategory(
+      id: json['id'] as int,
+      label: json['label'] as String,
+      iconCodePoint: json['iconCodePoint'] as int,
+      iconFontFamily: json['iconFontFamily'] as String?,
+      color: Color(json['color'] as int),
+      type: TransactionType.values.firstWhere(
+        (e) => e.toString() == json['type'],
+        orElse: () => TransactionType.expense,
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'label': label,
+      'iconCodePoint': iconCodePoint,
+      'iconFontFamily': iconFontFamily,
+      'color': color.value,
+      'type': type.toString(),
+    };
+  }
 }

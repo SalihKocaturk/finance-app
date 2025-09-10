@@ -5,8 +5,8 @@ import '../../../core/domain/models/transaction.dart';
 import '../notifiers/transaction_notifier.dart' show TransactionNotifier;
 
 final transactionFromIdProvider = Provider.family<Transaction, String>((ref, id) {
-  final list = ref.watch(transactionListProvider);
-
+  final listasync = ref.watch(transactionListProvider);
+  final list = listasync.value ?? [];
   return list.firstWhere(
     (t) => t.id == id,
   );

@@ -52,5 +52,20 @@
     "already_have_account": "zaten hesabın var mı? giriş yap",
     "rule_min_one_upper": "en az 1 büyük harf",
     "rule_min_one_lower": "en az 1 küçük harf",
-    "rule_min_length": "en az 8 karakter"
+    "rule_min_length": "en az 8 karakter",
+    "login_success": "Giriş başarılı.",
+    "account_success_title": "tebrikler, hesabınızı açtınız.",
+    "account_success_subtitle": "Bu paylaşım kodu ile ekibinizi davet edebilirsiniz.",
+    "share_code_label": "Paylaşım kodu",
+    "share_code_copied": "Paylaşım kodu kopyalandı",
+    "go_home": "Ana sayfaya git",
+    "account_info_not_found": "Hesap bilgisi bulunamadı.",
+    "leave_account": "hesaptan çık",
+    "close_account": "hesabı kapat",
+    "account_actions_title": "hesap işlemleri",
+    "account_actions_desc": "bir hesap oluşturabilir veya mevcut bir hesaba katılabilirsin.",
+    "create_account": "hesap oluştur",
+    "join_account": "hesaba katıl",
+    "invalid_share_code": "Paylaşım kodu sayıya çevrilemedi.",
+    "account": "hesap"
 }

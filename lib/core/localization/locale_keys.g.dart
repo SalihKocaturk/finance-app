@@ -57,5 +57,20 @@ abstract class  LocaleKeys {
   static const rule_min_one_upper = 'rule_min_one_upper';
   static const rule_min_one_lower = 'rule_min_one_lower';
   static const rule_min_length = 'rule_min_length';
+  static const login_success = 'login_success';
+  static const account_success_title = 'account_success_title';
+  static const account_success_subtitle = 'account_success_subtitle';
+  static const share_code_label = 'share_code_label';
+  static const share_code_copied = 'share_code_copied';
+  static const go_home = 'go_home';
+  static const account_info_not_found = 'account_info_not_found';
+  static const leave_account = 'leave_account';
+  static const close_account = 'close_account';
+  static const account_actions_title = 'account_actions_title';
+  static const account_actions_desc = 'account_actions_desc';
+  static const create_account = 'create_account';
+  static const join_account = 'join_account';
+  static const invalid_share_code = 'invalid_share_code';
+  static const account = 'account';
 
 }

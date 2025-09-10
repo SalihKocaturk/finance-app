@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/constants/toast.dart';
+import '../../../core/domain/enums/alert_type.dart';
 import '../../account_info/providers/form_providers.dart';
 import '../../auth/models/user.dart';
 
@@ -15,14 +16,18 @@ class UserNotifier extends AsyncNotifier<User?> {
   final authService = FirebaseService();
   final storage = FirebaseStorage.instance;
   @override
+  @override
   Future<User?> build() async {
     final user = await FirebaseService().getUser();
 
-    ref.read(editNameProvider.notifier).state = user?.name ?? "";
-    ref.read(editEmailProvider.notifier).state = user?.email ?? "";
-    ref.read(editBirthDateProvider.notifier).state = user?.birthDate ?? DateTime.now();
-    ref.read(imageUrlProvider.notifier).state = user?.imageUrl ?? "";
-    ref.read(imageFileProvider.notifier).state = null;
+    Future.microtask(() {
+      ref.read(editNameProvider.notifier).state = user?.name ?? "";
+      ref.read(editEmailProvider.notifier).state = user?.email ?? "";
+      ref.read(editBirthDateProvider.notifier).state = user?.birthDate ?? DateTime.now();
+      ref.read(imageUrlProvider.notifier).state = user?.imageUrl ?? "";
+      ref.read(imageFileProvider.notifier).state = null;
+    });
+
     return user;
   }
 
@@ -40,7 +45,10 @@ class UserNotifier extends AsyncNotifier<User?> {
   Future<void> save(WidgetRef ref) async {
     final user = state.value;
     if (user == null || (user.id).isEmpty) {
-      showToast("Kullanıcı oturumu bulunamadı.");
+      showToast(
+        "Kullanıcı oturumu bulunamadı.",
+        AlertType.fail,
+      );
       return;
     }
 
@@ -52,7 +60,10 @@ class UserNotifier extends AsyncNotifier<User?> {
     if (avatarImgFile != null && avatarImgFile.path.isNotEmpty) {
       final file = File(avatarImgFile.path);
       if (!file.existsSync()) {
-        showToast("Seçilen görsel bulunamadı: ${avatarImgFile.path}");
+        showToast(
+          "Seçilen görsel bulunamadı: ${avatarImgFile.path}",
+          AlertType.fail,
+        );
       } else {
         try {
           final path = 'users/${user.id}/profile_${DateTime.now().millisecondsSinceEpoch}.jpg';
@@ -65,9 +76,15 @@ class UserNotifier extends AsyncNotifier<User?> {
 
           uploadedImageUrl = await task.ref.getDownloadURL();
         } on FirebaseException catch (e) {
-          showToast('Yükleme hatası: ${e.code}');
+          showToast(
+            'Yükleme hatası: ${e.code}',
+            AlertType.fail,
+          );
         } catch (e) {
-          showToast('Beklenmeyen hata: $e');
+          showToast(
+            'Beklenmeyen hata: $e',
+            AlertType.fail,
+          );
         }
       }
     }
@@ -83,7 +100,10 @@ class UserNotifier extends AsyncNotifier<User?> {
       imageUrl: uploadedImageUrl,
     );
     if (!isUpdated) {
-      showToast("Profil güncellenemedi.");
+      showToast(
+        "Profil güncellenemedi.",
+        AlertType.fail,
+      );
       return;
     }
 
@@ -100,7 +120,10 @@ class UserNotifier extends AsyncNotifier<User?> {
     state = AsyncData(updated);
 
     await userStorage.setLoggedIn(true);
-    showToast("Profil güncellendi.");
+    showToast(
+      "Profil güncellendi.",
+      AlertType.success,
+    );
   }
 
   Future<void> delete() async {

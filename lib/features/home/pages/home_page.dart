@@ -1,13 +1,12 @@
 // i18n
 import 'package:easy_localization/easy_localization.dart';
-import 'package:expense_tracker/core/extensions/balance_extensions.dart';
+import 'package:expense_tracker/core/extensions/account_extensions.dart';
 import 'package:expense_tracker/core/extensions/date_extensions.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
 import 'package:expense_tracker/core/extensions/transaction_extensions.dart';
 import 'package:expense_tracker/core/localization/locale_keys.g.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/widgets/sheets/no_data_widget.dart';
-import 'package:expense_tracker/features/home/providers/balance_provider.dart';
 import 'package:expense_tracker/features/home/widgets/total_balance_card.dart';
 import 'package:expense_tracker/features/transaction/providers/transaction_list_provider.dart';
 import 'package:expense_tracker/features/transaction/providers/transaction_provider.dart';
@@ -20,6 +19,7 @@ import '../../../core/domain/enums/transaction_type.dart';
 import '../../../core/services/currency_service.dart';
 import '../../../core/storage/currency_storage.dart';
 import '../../../core/widgets/upper_pop_up.dart';
+import '../../auth/providers/account_provider.dart';
 import '../../base/providers/bottom_nav_provider.dart';
 import '../../transaction/pages/transaction_details_page.dart';
 import '../../transaction/widgets/transaction_list_item.dart';
@@ -30,8 +30,9 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final balance = ref.watch(balanceProvider);
-    final transactionList = ref.watch(transactionListProvider);
+    final transactionListAsync = ref.watch(transactionListProvider);
+    final transactionList = transactionListAsync.value ?? [];
+    final account = ref.watch(accountProvider).value;
     final t = ref.watch(currencyTypeProvider);
     final currencyType = ref.watch(currencyTypeProvider);
     return Scaffold(
@@ -108,11 +109,11 @@ class HomePage extends ConsumerWidget {
             const SizedBox(height: 20),
             TotalBalanceCard(
               balance:
-                  "${(balance.uiBalance(ref))} ${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}",
+                  "${account != null ? (account.uiBalance(ref)) : 0} ${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}",
               income:
-                  "${(balance.uiIncome(ref))} ${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}",
+                  "${account != null ? (account.uiIncome(ref)) : 0} ${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}",
               expenses:
-                  "${(balance.uiExpense(ref))} ${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}",
+                  "${account != null ? (account.uiExpense(ref)) : 0} ${currencyType == CurrencyType.tl ? "₺" : (currencyType == CurrencyType.eur ? "€" : "\$")}",
             ),
             const Gap(20),
             Padding(

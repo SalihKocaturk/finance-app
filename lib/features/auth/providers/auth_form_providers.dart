@@ -1,10 +1,10 @@
 import 'package:riverpod/riverpod.dart';
 
 final codeValueProvider = StateProvider.autoDispose<String>((ref) => '');
-final loginEmailProvider = StateProvider<String>((ref) => 'kocaturksalih8@gmail.com');
-final loginPasswordProvider = StateProvider<String>((ref) => 'Salihbaba');
+final loginEmailProvider = StateProvider<String>((ref) => '');
+final loginPasswordProvider = StateProvider<String>((ref) => '');
 final registernameProvider = StateProvider<String>((ref) => '');
-final registerEmailProvider = StateProvider<String>((ref) => 'kocaturksalih8@gmail.com');
+final registerEmailProvider = StateProvider<String>((ref) => '');
 final registerPasswordProvider = StateProvider<String>((ref) => '');
 final registerPassword2Provider = StateProvider<String>((ref) => '');
 final passwordVisibleProvider = StateProvider<bool>((ref) => true);

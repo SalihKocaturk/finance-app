@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:expense_tracker/core/constants/api_constant.dart';
 
 import '../constants/toast.dart';
+import '../domain/enums/alert_type.dart';
 
 class CurrencyService {
   final Dio _dio = Dio();
@@ -13,26 +14,42 @@ class CurrencyService {
       if (res.statusCode == 200) {
         final rate = (res.data?['data']?['USD'] as num?)?.toDouble();
         if (rate == null) {
-          final msg = 'USD değeri yok: ${res.data}';
-          showToast(msg);
-          throw Exception(msg);
+          final message = 'USD değeri yok: ${res.data}';
+          showToast(
+            message,
+            AlertType.fail,
+          );
+          throw Exception(message);
         }
-        print("succes: $rate");
         return rate;
       } else {
-        showToast("hata");
+        showToast(
+          "hata",
+          AlertType.fail,
+        );
       }
 
-      final msg = 'API error: ${res.statusCode} ${res.data}';
-      showToast(msg);
-      throw Exception(msg);
+      final message = 'API error: ${res.statusCode} ${res.data}';
+      showToast(
+        message,
+        AlertType.fail,
+      );
+      throw Exception(
+        message,
+      );
     } on DioException catch (e) {
-      final msg = 'İnternet veya API hatası: ${e.message}';
-      showToast(msg);
+      final message = 'İnternet veya API hatası: ${e.message}';
+      showToast(
+        message,
+        AlertType.fail,
+      );
       rethrow;
     } catch (e) {
-      final msg = 'Bilinmeyen hata: $e';
-      showToast(msg);
+      final message = 'Bilinmeyen hata: $e';
+      showToast(
+        message,
+        AlertType.fail,
+      );
       rethrow;
     }
   }
@@ -44,26 +61,40 @@ class CurrencyService {
       if (res.statusCode == 200) {
         final rate = (res.data?['data']?['EUR'] as num?)?.toDouble();
         if (rate == null) {
-          final msg = 'EUR değeri yok: ${res.data}';
-          showToast(msg);
-          throw Exception(msg);
+          final message = 'EUR değeri yok: ${res.data}';
+          showToast(
+            message,
+            AlertType.fail,
+          );
+          throw Exception(message);
         }
-        print("succes: $rate");
         return rate;
       } else {
-        showToast("hata");
+        showToast(
+          "hata",
+          AlertType.fail,
+        );
       }
 
-      final msg = 'API error: ${res.statusCode} ${res.data}';
-      showToast(msg);
-      throw Exception(msg);
+      final message = 'API error: ${res.statusCode} ${res.data}';
+      showToast(
+        message,
+        AlertType.fail,
+      );
+      throw Exception(message);
     } on DioException catch (e) {
-      final msg = 'İnternet veya API hatası: ${e.message}';
-      showToast(msg);
+      final message = 'İnternet veya API hatası: ${e.message}';
+      showToast(
+        message,
+        AlertType.fail,
+      );
       rethrow;
     } catch (e) {
-      final msg = 'Bilinmeyen hata: $e';
-      showToast(msg);
+      final message = 'Bilinmeyen hata: $e';
+      showToast(
+        message,
+        AlertType.fail,
+      );
       rethrow;
     }
   }

@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../../../core/constants/toast.dart';
+import '../../../core/domain/enums/alert_type.dart';
 import '../../../core/domain/enums/transaction_currency.dart';
 import '../../../core/domain/enums/transaction_type.dart';
 import '../../../core/localization/locale_keys.g.dart';
@@ -40,6 +41,7 @@ class TransactionDetailsPage extends ConsumerWidget {
     final categoryName = ref.watch(categoryNameProvider);
     final transactionType = ref.watch(transactionTypeProvider);
     final canSave = category != null && date != null && description != null && amount != null && amount != 0.0;
+
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 60,
@@ -68,11 +70,13 @@ class TransactionDetailsPage extends ConsumerWidget {
                 ref.read(amountProvider.notifier).state = parsed;
               } else {
                 ref.read(amountProvider.notifier).state = null;
-                showToast(LocaleKeys.enter_valid_number.tr().capitalizeFirst());
+                showToast(
+                  LocaleKeys.enter_valid_number.tr().capitalizeFirst(),
+                  AlertType.fail,
+                );
               }
             },
           ),
-
           const Gap(17),
           Row(
             children: [
@@ -128,7 +132,6 @@ class TransactionDetailsPage extends ConsumerWidget {
               ),
             ],
           ),
-
           const Gap(17),
           CustomDateField(
             label: LocaleKeys.date.tr().capitalizeFirst(),
@@ -145,15 +148,18 @@ class TransactionDetailsPage extends ConsumerWidget {
             maxLine: 3,
             onChanged: (val) => ref.read(descriptionProvider.notifier).state = val,
           ),
-
           const SizedBox(height: 24),
           CustomButton(
             color: Colors.blue,
             icon: Icons.check,
             text: LocaleKeys.save.tr().capitalizeFirst(),
             canSave: canSave,
-            onTap: () {
-              transactionListNotifier.save(isEdit == 2 ? transaction.id : null);
+            onTap: () async {
+              if (isEdit == 2) {
+                await transactionListNotifier.updatetx(transaction.id);
+              } else {
+                await transactionListNotifier.add();
+              }
               Navigator.of(context).pop();
             },
           ),

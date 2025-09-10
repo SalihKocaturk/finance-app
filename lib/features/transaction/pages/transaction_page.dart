@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../../../core/domain/enums/alert_type.dart';
 import '../../../core/localization/locale_keys.g.dart';
 import '../../../core/widgets/action_card.dart';
 import '../../../core/widgets/sheets/no_data_widget.dart';
@@ -22,7 +23,8 @@ class TransactionPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final transactionList = ref.watch(transactionListProvider);
+    final transactionListAsync = ref.watch(transactionListProvider);
+    final transactionList = transactionListAsync.value ?? [];
     final transactionListNotifier = ref.read(transactionListProvider.notifier);
 
     return Scaffold(
@@ -99,7 +101,10 @@ class TransactionPage extends ConsumerWidget {
                         SlidableAction(
                           onPressed: (_) {
                             transactionListNotifier.delete(transaction.id);
-                            showToast('${transaction.category.label} ${LocaleKeys.deleted.tr().capitalizeFirst()}');
+                            showToast(
+                              '${transaction.category.label} ${LocaleKeys.deleted.tr().capitalizeFirst()}',
+                              AlertType.success,
+                            );
                           },
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,

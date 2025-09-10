@@ -2,13 +2,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/themes/dark_theme.dart';
 import 'package:expense_tracker/core/themes/light_theme.dart';
 import 'package:expense_tracker/features/account_info/providers/user_provider.dart';
-import 'package:expense_tracker/features/base/base_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/themes/providers/theme_provider.dart';
+import 'features/auth/pages/account_page.dart';
 import 'features/auth/pages/login_page.dart';
+import 'features/auth/providers/has_account_provider.dart';
 import 'features/auth/providers/has_user_provider.dart';
+import 'features/base/base_page.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -17,15 +19,24 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hasUser = ref.watch(hasUserProvider);
     final themeMode = ref.watch(themeProvider);
-    ref.read(userProvider.notifier).fillEditors(ref);
+    final hasAccount = ref.watch(hasAccountProvider);
+    // ref.read(userProvider.notifier).fillEditors(ref);
     Widget home;
-    if (hasUser.isLoading) {
+    if (hasUser.isLoading || hasAccount.isLoading) {
       home = const Scaffold(body: Center(child: CircularProgressIndicator()));
-    } else if (hasUser.hasError) {
+    } else if (hasUser.hasError || hasAccount.hasError) {
       home = const Scaffold(body: Center(child: Text('Hata oluştu')));
     } else {
       final isLoggedIn = hasUser.value ?? false;
-      home = isLoggedIn ? const BasePage() : const LoginPage();
+
+      final accountSet = hasAccount.value ?? false;
+      ref.read(userProvider.notifier).fillEditors(ref);
+
+      home = (isLoggedIn && accountSet)
+          ? const BasePage()
+          : isLoggedIn
+          ? const AccountPage()
+          : const LoginPage();
     }
 
     return MaterialApp(

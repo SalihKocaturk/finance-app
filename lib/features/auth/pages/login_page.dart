@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker/app.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
-import 'package:expense_tracker/core/storage/user_storage.dart';
-import 'package:expense_tracker/features/auth/pages/account_page.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
 import 'package:expense_tracker/features/auth/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +39,7 @@ class LoginPage extends ConsumerWidget {
             CustomTextField(
               label: LocaleKeys.email.tr().capitalizeFirst(),
               hintText: LocaleKeys.email.tr().capitalizeFirst(),
-              onChanged: (val) => email = val,
+              onChanged: (val) => ref.read(loginEmailProvider.notifier).state = val,
               initialValue: email,
             ),
             const SizedBox(height: 16),
@@ -49,7 +48,7 @@ class LoginPage extends ConsumerWidget {
               hintText: LocaleKeys.password.tr().capitalizeFirst(),
               isPassword: true,
 
-              onChanged: (val) => password = val,
+              onChanged: (val) => ref.read(loginPasswordProvider.notifier).state = val,
               initialValue: password,
             ),
             const SizedBox(height: 20),
@@ -59,16 +58,25 @@ class LoginPage extends ConsumerWidget {
                 title: LocaleKeys.continueb.tr().capitalizeFirst(),
                 onPressed: () async {
                   await authNotifier.logIn(ref);
-                  final isLoggedIn = await UserStorage().isLoggedIn();
-                  if (isLoggedIn) {
-                    if (context.mounted) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const AccountPage(),
-                        ),
-                      );
-                    }
+                  if (context.mounted) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (_) => const App(),
+                      ),
+                    );
                   }
+                  //   Navigator.of(context).pushReplacement(
+                  //     MaterialPageRoute(
+                  //       builder: (_) => const AccountPage(),
+                  //     ),
+                  //   );
+
+                  // final isLoggedIn = await UserStorage().isLoggedIn();
+                  // if (isLoggedIn) {
+                  //   if (context.mounted) {
+
+                  //   }
+                  // }
                 },
               ),
             ),
