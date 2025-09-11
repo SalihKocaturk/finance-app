@@ -17,49 +17,47 @@ class RegisterPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final password = ref.watch(registerPasswordProvider);
+    final password2 = ref.watch(registerPassword2Provider); // 👈 confirm password
     var authNotifier = ref.read(authProvider.notifier);
 
     final hasUppercase = password.contains(RegExp(r'[A-Z]'));
     final hasLowercase = password.contains(RegExp(r'[a-z]'));
     final hasMinLength = password.length >= 8;
+    final passwordsMatch = password2.isNotEmpty && password2 == password;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 50,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 50),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               LocaleKeys.sign_up.tr().capitalizeFirst(),
               style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),
+
             CustomTextField(
               label: LocaleKeys.name.tr().capitalizeFirst(),
               hintText: LocaleKeys.name.tr().capitalizeFirst(),
-              isPassword: false,
               onChanged: (val) => ref.read(registernameProvider.notifier).state = val,
             ),
             const SizedBox(height: 16),
+
             CustomTextField(
               label: LocaleKeys.email.tr().capitalizeFirst(),
               hintText: LocaleKeys.email.tr().capitalizeFirst(),
               onChanged: (val) => ref.read(registerEmailProvider.notifier).state = val,
             ),
-
             const SizedBox(height: 16),
+
             CustomTextField(
               label: LocaleKeys.password.tr().capitalizeFirst(),
               hintText: LocaleKeys.password.tr().capitalizeFirst(),
               isPassword: true,
               onChanged: (val) => ref.read(registerPasswordProvider.notifier).state = val,
             ),
-
             const SizedBox(height: 16),
 
             CustomTextField(
@@ -68,9 +66,11 @@ class RegisterPage extends ConsumerWidget {
               isPassword: true,
               onChanged: (val) => ref.read(registerPassword2Provider.notifier).state = val,
             ),
+
             const SizedBox(height: 12),
-            _buildPasswordRules(hasUppercase, hasLowercase, hasMinLength),
+            _buildPasswordRules(hasUppercase, hasLowercase, hasMinLength, passwordsMatch),
             const SizedBox(height: 20),
+
             SizedBox(
               width: double.infinity,
               child: CustomElevatedButton(
@@ -78,9 +78,7 @@ class RegisterPage extends ConsumerWidget {
                   await authNotifier.register(ref);
                   if (context.mounted) {
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (_) => const AccountPage(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const AccountPage()),
                     );
                   }
                 },
@@ -94,9 +92,7 @@ class RegisterPage extends ConsumerWidget {
             GestureDetector(
               onTap: () {
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (_) => const LoginPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const LoginPage()),
                 );
               },
               child: Text(
@@ -110,7 +106,7 @@ class RegisterPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildPasswordRules(bool hasUpper, bool hasLower, bool hasLength) {
+  Widget _buildPasswordRules(bool hasUpper, bool hasLower, bool hasLength, bool passwordsMatch) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -127,6 +123,10 @@ class RegisterPage extends ConsumerWidget {
           Text(
             LocaleKeys.rule_min_length.tr(),
             style: TextStyle(color: hasLength ? Colors.green : Colors.grey),
+          ),
+          Text(
+            'Şifreler aynı olmalı',
+            style: TextStyle(color: passwordsMatch ? Colors.green : Colors.grey),
           ),
         ],
       ),

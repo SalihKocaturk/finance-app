@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../enums/user_type.dart'; // enum dosyanı buraya import et
+import '../enums/user_type.dart';
 
 class UserAccount extends Equatable {
   final String? id;

@@ -17,7 +17,7 @@ class ShareIdCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final surface = Theme.of(context).colorScheme.surface;
-    final border = Theme.of(context).dividerColor.withOpacity(0.4);
+    final border = Theme.of(context).dividerColor.withAlpha(40);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -31,7 +31,6 @@ class ShareIdCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Sol taraf: label + code
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -158,7 +158,7 @@ class HomePage extends ConsumerWidget {
                         ref.read(transactionProvider.notifier).setTransaction(transaction);
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => const TransactionDetailsPage(isEdit: 2),
+                            builder: (_) => const TransactionDetailsPage(isEdit: true),
                           ),
                         );
                       },

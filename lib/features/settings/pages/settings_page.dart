@@ -7,7 +7,6 @@ import 'package:expense_tracker/features/account_info/pages/account_info.dart';
 import 'package:expense_tracker/features/account_info/providers/user_provider.dart';
 import 'package:expense_tracker/features/app_settings/pages/app_settings_page.dart';
 import 'package:expense_tracker/features/auth/pages/account_page.dart';
-import 'package:expense_tracker/features/auth/pages/login_page.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:flutter/material.dart';
@@ -21,8 +20,10 @@ import '../../../core/localization/locale_keys.g.dart';
 import '../../../core/services/image_picker_service.dart';
 import '../../../core/themes/providers/theme_provider.dart';
 import '../../account_info/providers/form_providers.dart';
+import '../../auth/pages/login_page.dart';
 import '../../auth/providers/account_provider.dart';
 import '../../home/providers/balance_provider.dart';
+import '../../manage_account/pages/manage_account_page.dart';
 import '../../transaction/providers/transaction_list_provider.dart';
 import '../widgets/option_tile.dart';
 
@@ -38,7 +39,9 @@ class SettingsPage extends ConsumerWidget {
     final name = ref.watch(editNameProvider);
     final email = ref.watch(editEmailProvider);
     final account = ref.watch(accountProvider).value;
-
+    if (name == "") {
+      ref.read(userProvider.notifier).fillEditors(ref);
+    }
     if (account == null) {
       return const CircularProgressIndicator();
     }
@@ -151,31 +154,21 @@ class SettingsPage extends ConsumerWidget {
               );
             },
           ),
-          OptionTile(
-            title: LocaleKeys.logout.tr().capitalizeFirst(),
-            icon: Icons.logout_rounded,
-            iconBgColor: const Color(0xFFE53935),
-            onTap: () {
-              showLogoutBottomSheet(
-                context,
-                () {
-                  ref.read(themeProvider.notifier).clear();
-                  authNotifier.logOut();
-                  Navigator.pop(context);
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (_) => const LoginPage(),
-                    ),
-                  );
-                },
-                () {
-                  Navigator.pop(context);
-                },
-                height * 0.4,
-              );
-            },
-          ),
 
+          if (myUser?.type == UserType.owner)
+            OptionTile(
+              title: "Hesabı Yönet",
+
+              icon: Icons.manage_accounts,
+              iconBgColor: const Color.fromARGB(255, 12, 159, 24),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const ManageAccountPage(),
+                  ),
+                );
+              },
+            ),
           OptionTile(
             title: 'Hesaptan çık',
             icon: Icons.exit_to_app_rounded,
@@ -205,28 +198,30 @@ class SettingsPage extends ConsumerWidget {
               );
             },
           ),
-          if (myUser?.type == UserType.owner)
-            OptionTile(
-              title: 'Hesabı kapat',
-              icon: Icons.delete_forever_rounded,
-              iconBgColor: const Color(0xFFE53935),
-              onTap: () {
-                showLogoutBottomSheet(
-                  context,
-                  () async {
-                    final ok = await ref.read(accountProvider.notifier).deleteAccount();
-                    if (ok && context.mounted) {
-                      Navigator.pop(context);
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => const AccountPage()),
-                      );
-                    }
-                  },
-                  () => Navigator.pop(context),
-                  height * 0.4,
-                );
-              },
-            ),
+          OptionTile(
+            title: LocaleKeys.logout.tr().capitalizeFirst(),
+            icon: Icons.logout_rounded,
+            iconBgColor: const Color(0xFFE53935),
+            onTap: () {
+              showLogoutBottomSheet(
+                context,
+                () {
+                  ref.read(themeProvider.notifier).clear();
+                  authNotifier.logOut();
+                  Navigator.pop(context);
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (_) => const LoginPage(),
+                    ),
+                  );
+                },
+                () {
+                  Navigator.pop(context);
+                },
+                height * 0.4,
+              );
+            },
+          ),
         ],
       ),
     );

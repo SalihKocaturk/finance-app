@@ -27,7 +27,6 @@ class StatisticsPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // üst sayaç kartları (sizdeki gibi)
               Row(
                 children: [
                   Expanded(

@@ -57,8 +57,8 @@ class LoginPage extends ConsumerWidget {
               child: CustomElevatedButton(
                 title: LocaleKeys.continueb.tr().capitalizeFirst(),
                 onPressed: () async {
-                  await authNotifier.logIn(ref);
-                  if (context.mounted) {
+                  final isLogged = await authNotifier.logIn(ref);
+                  if (context.mounted && isLogged) {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (_) => const App(),

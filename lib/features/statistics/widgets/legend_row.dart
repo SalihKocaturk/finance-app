@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class LegendRow extends StatelessWidget {
   final Color color;
@@ -16,11 +17,11 @@ class LegendRow extends StatelessWidget {
           height: 10,
           decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3)),
         ),
-        const SizedBox(width: 8),
+        const Gap(8),
         Flexible(
           child: Text(label, style: style, overflow: TextOverflow.ellipsis),
         ),
-        const SizedBox(width: 6),
+        const Gap(6),
         Text(valueText, style: style?.copyWith(fontWeight: FontWeight.w700)),
       ],
     );

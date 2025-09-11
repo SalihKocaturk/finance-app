@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
+import 'package:expense_tracker/core/extensions/user_account_permission.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/widgets/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -10,10 +12,13 @@ import '../../../core/constants/toast.dart';
 import '../../../core/domain/enums/alert_type.dart';
 import '../../../core/domain/enums/transaction_currency.dart';
 import '../../../core/domain/enums/transaction_type.dart';
+import '../../../core/domain/enums/user_type.dart';
+import '../../../core/domain/models/user_account.dart';
 import '../../../core/localization/locale_keys.g.dart';
 import '../../../core/widgets/custom_date_picker.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../../../core/widgets/pop_page_button.dart';
+import '../../auth/providers/account_provider.dart';
 import '../providers/transaction_category_provider.dart';
 import '../providers/transaction_form_providers.dart';
 import '../providers/transaction_list_provider.dart';
@@ -22,7 +27,7 @@ import '../widgets/category_dialog.dart' show CategoryDialog;
 import '../widgets/category_dropdown_picker.dart';
 
 class TransactionDetailsPage extends ConsumerWidget {
-  final int isEdit;
+  final bool isEdit;
   const TransactionDetailsPage({
     super.key,
     required this.isEdit,
@@ -41,7 +46,14 @@ class TransactionDetailsPage extends ConsumerWidget {
     final categoryName = ref.watch(categoryNameProvider);
     final transactionType = ref.watch(transactionTypeProvider);
     final canSave = category != null && date != null && description != null && amount != null && amount != 0.0;
-
+    final account = ref.watch(accountProvider).valueOrNull;
+    final currentUid = firebase.FirebaseAuth.instance.currentUser?.uid;
+    final me = account?.accounts?.firstWhere(
+      (u) => u.id == currentUid,
+      orElse: () => const UserAccount(type: UserType.member),
+    );
+    final canManageTx = me?.canManageTransactions ?? false;
+    final canAddOnly = me?.canAddOnly ?? false;
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 60,
@@ -153,14 +165,17 @@ class TransactionDetailsPage extends ConsumerWidget {
             color: Colors.blue,
             icon: Icons.check,
             text: LocaleKeys.save.tr().capitalizeFirst(),
-            canSave: canSave,
+            canSave: isEdit && !canManageTx ? false : canSave,
             onTap: () async {
-              if (isEdit == 2) {
+              if (isEdit == true && canManageTx) {
                 await transactionListNotifier.updatetx(transaction.id);
-              } else {
-                await transactionListNotifier.add();
               }
-              Navigator.of(context).pop();
+              if (isEdit == false) {
+                await transactionListNotifier.add();
+              } else {}
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
             },
           ),
         ],

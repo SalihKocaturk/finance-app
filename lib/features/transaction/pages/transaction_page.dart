@@ -1,12 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/constants/toast.dart';
 import 'package:expense_tracker/core/domain/enums/transaction_type.dart';
+import 'package:expense_tracker/core/domain/enums/user_type.dart';
+import 'package:expense_tracker/core/domain/models/user_account.dart';
 import 'package:expense_tracker/core/extensions/date_extensions.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
 import 'package:expense_tracker/core/extensions/transaction_extensions.dart';
+import 'package:expense_tracker/core/extensions/user_account_permission.dart';
 import 'package:expense_tracker/features/transaction/providers/transaction_category_provider.dart';
 import 'package:expense_tracker/features/transaction/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/transaction/widgets/transaction_list_item.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -15,6 +19,7 @@ import '../../../core/domain/enums/alert_type.dart';
 import '../../../core/localization/locale_keys.g.dart';
 import '../../../core/widgets/action_card.dart';
 import '../../../core/widgets/sheets/no_data_widget.dart';
+import '../../auth/providers/account_provider.dart';
 import '../providers/transaction_list_provider.dart';
 import 'transaction_details_page.dart';
 
@@ -26,6 +31,14 @@ class TransactionPage extends ConsumerWidget {
     final transactionListAsync = ref.watch(transactionListProvider);
     final transactionList = transactionListAsync.value ?? [];
     final transactionListNotifier = ref.read(transactionListProvider.notifier);
+    final account = ref.watch(accountProvider).valueOrNull;
+    final currentUid = firebase.FirebaseAuth.instance.currentUser?.uid;
+    final me = account?.accounts?.firstWhere(
+      (u) => u.id == currentUid,
+      orElse: () => const UserAccount(type: UserType.member),
+    );
+    final canManageTx = me?.canManageTransactions ?? false;
+    final canAddOnly = me?.canAddOnly ?? false;
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +61,7 @@ class TransactionPage extends ConsumerWidget {
                       ref.read(transactionTypeProvider.notifier).state = TransactionType.income;
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => const TransactionDetailsPage(isEdit: 0),
+                          builder: (_) => const TransactionDetailsPage(isEdit: false),
                         ),
                       );
                     },
@@ -67,7 +80,7 @@ class TransactionPage extends ConsumerWidget {
 
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => const TransactionDetailsPage(isEdit: 1),
+                          builder: (_) => const TransactionDetailsPage(isEdit: false),
                         ),
                       );
                     },
@@ -85,36 +98,15 @@ class TransactionPage extends ConsumerWidget {
                 ),
               ),
             ),
+
             if (transactionList.isEmpty) const NoDataWidget(),
             Expanded(
               child: ListView.builder(
                 itemCount: transactionList.length,
                 itemBuilder: (context, index) {
                   var transaction = transactionList[index];
-
-                  return Slidable(
-                    key: ValueKey(transaction.id),
-                    endActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      extentRatio: 0.20,
-                      children: [
-                        SlidableAction(
-                          onPressed: (_) {
-                            transactionListNotifier.delete(transaction.id);
-                            showToast(
-                              '${transaction.category.label} ${LocaleKeys.deleted.tr().capitalizeFirst()}',
-                              AlertType.success,
-                            );
-                          },
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-
-                          icon: Icons.delete,
-                          label: LocaleKeys.delete.tr().capitalizeFirst(),
-                        ),
-                      ],
-                    ),
-                    child: GestureDetector(
+                  if (!canManageTx) {
+                    return GestureDetector(
                       child: TransactionListItem(
                         title: transaction.category.label,
                         dateText: transaction.date.formatAsDMY(),
@@ -128,13 +120,57 @@ class TransactionPage extends ConsumerWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => const TransactionDetailsPage(
-                              isEdit: 2,
+                              isEdit: true,
                             ),
                           ),
                         );
                       },
-                    ),
-                  );
+                    );
+                  } else {
+                    return Slidable(
+                      key: ValueKey(transaction.id),
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        extentRatio: 0.20,
+                        children: [
+                          SlidableAction(
+                            onPressed: (_) {
+                              transactionListNotifier.delete(transaction.id);
+                              showToast(
+                                '${transaction.category.label} ${LocaleKeys.deleted.tr().capitalizeFirst()}',
+                                AlertType.success,
+                              );
+                            },
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+
+                            icon: Icons.delete,
+                            label: LocaleKeys.delete.tr().capitalizeFirst(),
+                          ),
+                        ],
+                      ),
+                      child: GestureDetector(
+                        child: TransactionListItem(
+                          title: transaction.category.label,
+                          dateText: transaction.date.formatAsDMY(),
+                          amountText: transaction.uiPrice(ref),
+                          isIncome: transaction.category.type == TransactionType.income,
+                          icon: transaction.category.icon,
+                          iconBg: transaction.category.color,
+                        ),
+                        onTap: () {
+                          ref.read(transactionProvider.notifier).setTransaction(transaction);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const TransactionDetailsPage(
+                                isEdit: true,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
                 },
               ),
             ),

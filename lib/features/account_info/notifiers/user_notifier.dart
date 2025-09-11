@@ -20,13 +20,11 @@ class UserNotifier extends AsyncNotifier<User?> {
   Future<User?> build() async {
     final user = await FirebaseService().getUser();
 
-    Future.microtask(() {
-      ref.read(editNameProvider.notifier).state = user?.name ?? "";
-      ref.read(editEmailProvider.notifier).state = user?.email ?? "";
-      ref.read(editBirthDateProvider.notifier).state = user?.birthDate ?? DateTime.now();
-      ref.read(imageUrlProvider.notifier).state = user?.imageUrl ?? "";
-      ref.read(imageFileProvider.notifier).state = null;
-    });
+    ref.read(editNameProvider.notifier).state = user?.name ?? "";
+    ref.read(editEmailProvider.notifier).state = user?.email ?? "";
+    ref.read(editBirthDateProvider.notifier).state = user?.birthDate ?? DateTime.now();
+    ref.read(imageUrlProvider.notifier).state = user?.imageUrl ?? "";
+    ref.read(imageFileProvider.notifier).state = null;
 
     return user;
   }
@@ -34,12 +32,14 @@ class UserNotifier extends AsyncNotifier<User?> {
   void fillEditors(WidgetRef ref) {
     final user = state.value;
     if (user == null) return;
-    ref.read(editNameProvider.notifier).state = user.name;
-    ref.read(editEmailProvider.notifier).state = user.email;
-    ref.read(editBirthDateProvider.notifier).state = user.birthDate ?? DateTime.now();
-    ref.read(imageUrlProvider.notifier).state = user.imageUrl ?? "";
 
-    ref.read(imageFileProvider.notifier).state = null;
+    Future.microtask(() {
+      ref.read(editNameProvider.notifier).state = user.name;
+      ref.read(editEmailProvider.notifier).state = user.email;
+      ref.read(editBirthDateProvider.notifier).state = user.birthDate ?? DateTime.now();
+      ref.read(imageUrlProvider.notifier).state = user.imageUrl ?? "";
+      ref.read(imageFileProvider.notifier).state = null;
+    });
   }
 
   Future<void> save(WidgetRef ref) async {

@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/themes/dark_theme.dart';
 import 'package:expense_tracker/core/themes/light_theme.dart';
-import 'package:expense_tracker/features/account_info/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +29,7 @@ class App extends ConsumerWidget {
       final isLoggedIn = hasUser.value ?? false;
 
       final accountSet = hasAccount.value ?? false;
-      ref.read(userProvider.notifier).fillEditors(ref);
+      // ref.read(userProvider.notifier).fillEditors(ref);
 
       home = (isLoggedIn && accountSet)
           ? const BasePage()

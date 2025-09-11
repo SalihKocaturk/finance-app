@@ -185,6 +185,28 @@ class FirebaseService {
     }
   }
 
+  Future<bool> setUserRole({
+    required String userId,
+    required UserType newType,
+  }) async {
+    try {
+      final accRef = await _currentAccountDocRef();
+      if (accRef == null) return false;
+
+      final typeStr = switch (newType) {
+        UserType.owner => 'owner',
+        UserType.mod => 'mod',
+        UserType.member => 'member',
+      };
+
+      await _usersCol(accRef).doc(userId).update({'type': typeStr});
+      return true;
+    } catch (e) {
+      showToast('Rol güncelleme hatası: $e', AlertType.fail);
+      return false;
+    }
+  }
+
   Future<bool> deleteAccount() async {
     try {
       final firebaseUser = _auth.currentUser;
@@ -205,25 +227,20 @@ class FirebaseService {
         return false;
       }
 
-      // 1) Tüm işlemleri sil (üyeyken yetkin var)
       final txSnap = await _txCol(accRef).get();
       for (final d in txSnap.docs) {
         await d.reference.delete();
       }
 
-      // 2) Users altındaki DİĞER üyeleri sil (kendin hariç)
       final usersSnap = await _usersCol(accRef).get();
       for (final d in usersSnap.docs) {
         if (d.id != firebaseUser.uid) {
-          await d.reference.delete(); // rules: isMember(accId) izin verir
+          await d.reference.delete();
         }
       }
 
-      // 3) Account dokümanını sil
-      await accRef.delete(); // rules: isMember(accId) → hâlâ üyeyiz çünkü kendi kaydımız duruyor
+      await accRef.delete();
 
-      // 4) En son kendi user kaydını da sil (artık isMember false olsa bile
-      // rules: request.auth.uid == userId olduğu için izin var)
       final myUserDoc = _usersCol(accRef).doc(firebaseUser.uid);
       final mySnap = await myUserDoc.get();
       if (mySnap.exists) {
@@ -240,6 +257,30 @@ class FirebaseService {
         "Hesap silme hatası: $e",
         AlertType.fail,
       );
+      return false;
+    }
+  }
+
+  Future<bool> removeUserFromAccount(String userId) async {
+    try {
+      final accRef = await _currentAccountDocRef();
+      if (accRef == null) {
+        showToast("Bağlı olduğunuz bir hesap bulunamadı.", AlertType.fail);
+        return false;
+      }
+
+      final doc = _usersCol(accRef).doc(userId);
+      final exists = (await doc.get()).exists;
+      if (!exists) {
+        showToast("Silinecek üye bulunamadı.", AlertType.fail);
+        return false;
+      }
+
+      await doc.delete();
+      showToast("Üye kaldırıldı.", AlertType.success);
+      return true;
+    } catch (e) {
+      showToast("Üye kaldırma hatası: $e", AlertType.fail);
       return false;
     }
   }

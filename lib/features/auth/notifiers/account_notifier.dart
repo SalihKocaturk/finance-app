@@ -1,7 +1,9 @@
 import 'package:expense_tracker/features/transaction/notifiers/transaction_list_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/domain/enums/user_type.dart';
 import '../../../core/domain/models/account.dart';
+import '../../../core/domain/models/user_account.dart';
 import '../../../core/services/firebase_services.dart';
 
 class AccountNotifier extends AsyncNotifier<Account?> {
@@ -23,6 +25,28 @@ class AccountNotifier extends AsyncNotifier<Account?> {
     }
 
     state = AsyncData(created);
+    return true;
+  }
+
+  Future<bool> removeUser(String userId) async {
+    final ok = await _service.removeUserFromAccount(userId);
+    if (!ok) return false;
+
+    final cur = state.value;
+    if (cur != null) {
+      final updatedUsers = (cur.accounts ?? const <UserAccount>[]).where((u) => u.id != userId).toList();
+
+      final updated = Account(
+        id: cur.id,
+        accounts: updatedUsers,
+        transactions: cur.transactions,
+        shareId: cur.shareId,
+      );
+
+      state = AsyncData(updated);
+    } else {
+      await getAccountSession();
+    }
     return true;
   }
 
@@ -65,6 +89,31 @@ class AccountNotifier extends AsyncNotifier<Account?> {
     state = const AsyncLoading();
     final ok = await _service.deleteAccount();
     state = ok ? const AsyncData(null) : AsyncValue.error('Hesabı kapatma başarısız', StackTrace.current);
+    return ok;
+  }
+
+  Future<bool> changeUserRole(String userId, UserType newType) async {
+    final current = state.value;
+    if (current == null) return false;
+
+    final updatedAccounts = (current.accounts ?? [])
+        .map((u) => u.id == userId ? UserAccount(id: u.id, email: u.email, type: newType) : u)
+        .toList();
+
+    final optimistic = Account(
+      id: current.id,
+      accounts: updatedAccounts,
+      transactions: current.transactions,
+      shareId: current.shareId,
+    );
+
+    state = AsyncData(optimistic);
+
+    final ok = await _service.setUserRole(userId: userId, newType: newType);
+    if (!ok) {
+      // başarısızsa geri al
+      state = AsyncData(current);
+    }
     return ok;
   }
 }
