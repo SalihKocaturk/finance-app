@@ -1,4 +1,3 @@
-// core/extensions/user_account_permission.dart
 import '../domain/enums/user_type.dart';
 import '../domain/models/user_account.dart';
 

@@ -29,7 +29,7 @@ class WeeklyTransactionsChart extends StatelessWidget {
 
     final income = List<double>.filled(7, 0.0);
     final expense = List<double>.filled(7, 0.0);
-
+    if (transactions.isEmpty) return const SizedBox();
     for (final transaction in transactions) {
       final d = DateTime(transaction.date.year, transaction.date.month, transaction.date.day);
       final idx = indexOfDay[d];
@@ -162,10 +162,17 @@ class WeeklyTransactionsChart extends StatelessWidget {
   }
 
   static double _chooseInterval(double maxY) {
-    if (maxY <= 2000) return 500;
-    if (maxY <= 5000) return 1000;
-    if (maxY <= 10000) return 2000;
-    if (maxY <= 20000) return 4000;
-    return 5000;
+    if (maxY <= 2_000) return 500;
+    if (maxY <= 5_000) return 1_000;
+    if (maxY <= 10_000) return 2_000;
+    if (maxY <= 20_000) return 4_000;
+
+    if (maxY <= 100_000) return 10_000;
+    if (maxY <= 500_000) return 25_000;
+
+    if (maxY <= 5_000_000) return 50_000;
+    if (maxY <= 10_000_000) return 250_000;
+
+    return 500_000;
   }
 }

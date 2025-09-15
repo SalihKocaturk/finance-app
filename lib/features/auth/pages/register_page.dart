@@ -17,7 +17,7 @@ class RegisterPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final password = ref.watch(registerPasswordProvider);
-    final password2 = ref.watch(registerPassword2Provider); // 👈 confirm password
+    final password2 = ref.watch(registerPassword2Provider);
     var authNotifier = ref.read(authProvider.notifier);
 
     final hasUppercase = password.contains(RegExp(r'[A-Z]'));

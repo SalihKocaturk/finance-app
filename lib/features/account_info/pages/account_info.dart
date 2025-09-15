@@ -195,14 +195,6 @@ class AccountInfo extends ConsumerWidget {
               ),
               const Gap(20),
 
-              //! Password değiştirme işlemi için önce password girişi yapılacak ve başka bir yerden çağırılması daha
-              // CustomTextField(
-              //   label: LocaleKeys.password.tr().capitalizeFirst(),
-              //   hintText: LocaleKeys.password.tr().capitalizeFirst(),
-              //   isPassword: true,
-              //   onChanged: (value) {},
-              // ),
-              // const Gap(20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 36.0),
                 child: CustomButton(

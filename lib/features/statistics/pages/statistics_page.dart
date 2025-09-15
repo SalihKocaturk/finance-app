@@ -1,4 +1,3 @@
-// ... sizin mevcut StatisticsPage dosyanız
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';

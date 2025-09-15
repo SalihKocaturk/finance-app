@@ -1,5 +1,3 @@
-// core/domain/models/transaction.dart
-
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/core/domain/enums/transaction_currency.dart';
 import 'package:expense_tracker/core/domain/models/transaction_category.dart';

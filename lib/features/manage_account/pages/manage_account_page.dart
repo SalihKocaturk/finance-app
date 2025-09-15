@@ -1,4 +1,3 @@
-// features/manage_account/pages/manage_account_page.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
 import 'package:expense_tracker/core/widgets/sheets/remove_member_sheet.dart';
@@ -32,7 +31,7 @@ class ManageAccountPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hesabı Yönet'),
+        title: Text(LocaleKeys.manage_account.tr().capitalizeFirst()),
         centerTitle: true,
 
         leadingWidth: 60,
@@ -51,7 +50,7 @@ class ManageAccountPage extends ConsumerWidget {
           : account == null
           ? Center(
               child: Text(
-                'Hesap bulunamadı',
+                LocaleKeys.account_not_found.tr().capitalizeFirst(),
                 style: theme.textTheme.bodyMedium,
               ),
             )
@@ -62,7 +61,7 @@ class ManageAccountPage extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: ActionCard(
-                        title: 'Üye',
+                        title: LocaleKeys.member.tr().capitalizeFirst(),
                         bg: const Color(0xFF7E57C2),
                         count: account.accounts?.length ?? 0,
                       ),
@@ -70,7 +69,7 @@ class ManageAccountPage extends ConsumerWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ActionCard(
-                        title: LocaleKeys.transactions.tr(),
+                        title: LocaleKeys.transactions.tr().capitalizeFirst(),
                         bg: const Color(0xFFF57C00),
                         count: account.transactions?.length ?? 0,
                       ),
@@ -82,7 +81,7 @@ class ManageAccountPage extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8, left: 4),
                   child: Text(
-                    "Davet & Paylaşım Kodu",
+                    LocaleKeys.share_invite_code.tr().capitalizeFirst(),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
                   ),
                 ),
@@ -101,7 +100,7 @@ class ManageAccountPage extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Paylaşım Kodu', style: theme.textTheme.labelMedium),
+                              Text(LocaleKeys.share_code.tr().capitalizeFirst(), style: theme.textTheme.labelMedium),
                               const SizedBox(height: 6),
                               Text(
                                 (account.shareId).toString().padLeft(6, '0'),
@@ -113,7 +112,7 @@ class ManageAccountPage extends ConsumerWidget {
                         CustomButton(
                           color: Colors.blue,
                           icon: Icons.copy,
-                          text: 'Kopyala',
+                          text: LocaleKeys.copy.tr().capitalizeFirst(),
                           onTap: () async {
                             await Clipboard.setData(
                               ClipboardData(text: account.shareId.toString().padLeft(6, '0')),
@@ -135,7 +134,7 @@ class ManageAccountPage extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8, left: 4),
                   child: Text(
-                    "Üyeler",
+                    LocaleKeys.users.tr().capitalizeFirst(),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
                   ),
                 ),
@@ -150,7 +149,7 @@ class ManageAccountPage extends ConsumerWidget {
                         if (user.id == null) return;
                         final ok = await ref.read(accountProvider.notifier).changeUserRole(user.id!, role);
                         if (context.mounted && ok) {
-                          showToast("Rol Güncellendi", AlertType.info);
+                          showToast(LocaleKeys.role_updated.tr().capitalizeFirst(), AlertType.info);
                         }
                       },
                       onRemove: () async {
@@ -165,7 +164,9 @@ class ManageAccountPage extends ConsumerWidget {
                               final ok = await ref.read(accountProvider.notifier).removeUser(user.id!);
                               if (context.mounted) {
                                 showToast(
-                                  ok ? "Üye kaldırıldı" : "Üye kaldırılamadı",
+                                  ok
+                                      ? LocaleKeys.member_removed.tr().capitalizeFirst()
+                                      : LocaleKeys.member_cannot_removed.tr().capitalizeFirst(),
                                   ok ? AlertType.success : AlertType.fail,
                                 );
                               }
@@ -183,7 +184,7 @@ class ManageAccountPage extends ConsumerWidget {
                   CustomButton(
                     color: const Color(0xFFE53935),
                     icon: Icons.delete_forever_rounded,
-                    text: 'Hesabı Kapat',
+                    text: LocaleKeys.close_account.tr().capitalizeFirst(),
                     onTap: () async {
                       final ok = await ref.read(accountProvider.notifier).deleteAccount();
                       if (ok && context.mounted) {

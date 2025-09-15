@@ -81,16 +81,6 @@ class AccountPage extends ConsumerWidget {
 
                 final shareId = int.tryParse(cleaned);
                 if (shareId == null) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          LocaleKeys.invalid_share_code.tr().capitalizeFirst(),
-                        ),
-                      ),
-                    );
-                  }
-
                   return;
                 }
 

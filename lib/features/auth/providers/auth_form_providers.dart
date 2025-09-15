@@ -9,5 +9,3 @@ final registerPasswordProvider = StateProvider<String>((ref) => '');
 final registerPassword2Provider = StateProvider<String>((ref) => '');
 final passwordVisibleProvider = StateProvider<bool>((ref) => true);
 final birthDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
-//isimlendirmeler duzeltilecek ve register icin ayrı ayrı yapılacak provider
-//TODO:: loginpasswordprovider olusturulacak, email provider da iki defa olcak

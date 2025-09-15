@@ -111,7 +111,6 @@ class AccountNotifier extends AsyncNotifier<Account?> {
 
     final ok = await _service.setUserRole(userId: userId, newType: newType);
     if (!ok) {
-      // başarısızsa geri al
       state = AsyncData(current);
     }
     return ok;

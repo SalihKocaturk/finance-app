@@ -10,8 +10,6 @@ import '../../../core/localization/locale_keys.g.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../providers/auth_form_providers.dart';
 import 'register_page.dart';
-//! bu sayfanın yapısında hata yapmışız, lokal değişkenlere yazılıyor providera yazılmıyor!!
-//! bu sayfanın yapısında hata yapmışız, lokal değişkenlere yazılıyor providera yazılmıyor!!
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -65,18 +63,6 @@ class LoginPage extends ConsumerWidget {
                       ),
                     );
                   }
-                  //   Navigator.of(context).pushReplacement(
-                  //     MaterialPageRoute(
-                  //       builder: (_) => const AccountPage(),
-                  //     ),
-                  //   );
-
-                  // final isLoggedIn = await UserStorage().isLoggedIn();
-                  // if (isLoggedIn) {
-                  //   if (context.mounted) {
-
-                  //   }
-                  // }
                 },
               ),
             ),

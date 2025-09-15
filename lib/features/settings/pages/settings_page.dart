@@ -94,22 +94,12 @@ class SettingsPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                // IconButton(
-                //   onPressed: () {
-                //     Navigator.of(context).push(
-                //       MaterialPageRoute(
-                //         builder: (_) => const EditProfilePage(),
-                //       ),
-                //     );
-                //   },
-                //   icon: const Icon(Icons.edit),
-                // ),
               ],
             ),
           ),
 
           OptionTile(
-            title: LocaleKeys.account_info.tr().capitalizeFirst(),
+            title: LocaleKeys.user_info.tr().capitalizeFirst(),
             icon: Icons.person_rounded,
             iconBgColor: const Color(0xFF7E57C2),
             onTap: () {
@@ -157,7 +147,7 @@ class SettingsPage extends ConsumerWidget {
 
           if (myUser?.type == UserType.owner)
             OptionTile(
-              title: "Hesabı Yönet",
+              title: LocaleKeys.manage_account.tr().capitalizeFirst(),
 
               icon: Icons.manage_accounts,
               iconBgColor: const Color.fromARGB(255, 12, 159, 24),
@@ -170,7 +160,7 @@ class SettingsPage extends ConsumerWidget {
               },
             ),
           OptionTile(
-            title: 'Hesaptan çık',
+            title: LocaleKeys.quit_account.tr().capitalizeFirst(),
             icon: Icons.exit_to_app_rounded,
             iconBgColor: const Color(0xFFFB8C00),
             onTap: () {

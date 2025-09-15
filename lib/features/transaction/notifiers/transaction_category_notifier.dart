@@ -85,7 +85,6 @@ class TransactionCategoriesNotifier extends Notifier<List<TransactionCategory>> 
     required TransactionType type,
   }) {
     const IconData fixedIcon = Icons.category;
-    // final Color randomColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
 
     final newCat = TransactionCategory.rename(
       id: state.length + 1,

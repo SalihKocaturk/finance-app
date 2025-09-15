@@ -1,6 +1,8 @@
 {
+    "no": "no",
     "log_in": "giriş yap",
     "email": "e-posta",
+    "user_info": "kullanıcı bilgileri",
     "date_of_birth": "doğum tarihi",
     "password": "şifre",
     "confirm_password": "şifreyi doğrula",
@@ -66,6 +68,22 @@
     "account_actions_desc": "bir hesap oluşturabilir veya mevcut bir hesaba katılabilirsin.",
     "create_account": "hesap oluştur",
     "join_account": "hesaba katıl",
-    "invalid_share_code": "Paylaşım kodu sayıya çevrilemedi.",
-    "account": "hesap"
+    "invalid_share_code": "paylaşım kodu sayıya çevrilemedi.",
+    "account": "hesap",
+    "do_you_want_to_logout": "çıkış yapmak istediğinize emin misiniz?",
+    "manage_account": "hesabı yönet",
+    "quit_account": "hesaptan çık",
+    "account_not_found": "hesap bulunamadı",
+    "user_not_found": "kullanıcı bulunamadı",
+    "users": "kullanıcılar",
+    "member": "üye",
+    "members": "üyeler",
+    "member_removed": "üye kaldırıldı",
+    "member_cannot_removed": "üye kaldırılamadı",
+    "role_updated": "rol güncellendi",
+    "share_invite_code": "Davet & Paylaşım Kodu",
+    "share_code": "paylaşım Kodu",
+    "copy": "kopyala",
+    "incorrect_password": "şifre yanlış",
+    "unespected_error": "beklenmeyen hata"
 }

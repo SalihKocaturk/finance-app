@@ -72,7 +72,5 @@ class AuthNotifier extends Notifier<User> {
     ref.invalidate(editEmailProvider);
     ref.invalidate(editBirthDateProvider);
     ref.invalidate(imageUrlProvider);
-
-    // ref.invalidate(userProvider);
   }
 }

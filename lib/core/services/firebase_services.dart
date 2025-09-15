@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker/core/extensions/string_extensions.dart';
+import 'package:expense_tracker/core/localization/locale_keys.g.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 
 import '../../features/auth/models/user.dart';
@@ -28,20 +31,28 @@ class FirebaseService {
     return accRef is DocumentReference<Map<String, dynamic>> ? accRef : null;
   }
 
-  CollectionReference<Map<String, dynamic>> _usersCol(DocumentReference<Map<String, dynamic>> accRef) =>
+  CollectionReference<Map<String, dynamic>> _usersRef(DocumentReference<Map<String, dynamic>> accRef) =>
       accRef.collection('users');
 
-  CollectionReference<Map<String, dynamic>> _txCol(DocumentReference<Map<String, dynamic>> accRef) =>
+  CollectionReference<Map<String, dynamic>> _txRef(DocumentReference<Map<String, dynamic>> accRef) =>
       accRef.collection('transactions');
 
   Future<List<tx.Transaction>> getTransactions() async {
     try {
-      final accRef = await _currentAccountDocRef();
-      if (accRef == null) return [];
-      final snap = await _txCol(accRef).orderBy('date', descending: true).get();
-      return snap.docs.map((d) {
-        final m = d.data();
-        return tx.Transaction.fromJson({...m, 'id': m['id'] ?? d.id});
+      final accountDocumentRef = await _currentAccountDocRef();
+      if (accountDocumentRef == null) return [];
+
+      final transactionCollectionRef = _txRef(accountDocumentRef);
+      final transactionQuerySnapshot = await transactionCollectionRef.orderBy('date', descending: true).get();
+
+      return transactionQuerySnapshot.docs.map((transactionDocSnapshot) {
+        final transactionData = transactionDocSnapshot.data();
+        return tx.Transaction.fromJson(
+          {
+            ...transactionData,
+            'id': transactionData['id'] ?? transactionDocSnapshot.id,
+          },
+        );
       }).toList();
     } catch (e) {
       showToast(
@@ -56,7 +67,7 @@ class FirebaseService {
     try {
       final accRef = await _currentAccountDocRef();
       if (accRef == null) return false;
-      final col = _txCol(accRef);
+      final col = _txRef(accRef);
       await col.doc(t.id).set(t.toJson(), SetOptions(merge: false));
       return true;
     } catch (e) {
@@ -72,7 +83,7 @@ class FirebaseService {
     try {
       final accRef = await _currentAccountDocRef();
       if (accRef == null) return false;
-      final col = _txCol(accRef);
+      final col = _txRef(accRef);
       final doc = col.doc(t.id);
       final exists = (await doc.get()).exists;
       if (!exists) {
@@ -97,7 +108,7 @@ class FirebaseService {
     try {
       final accRef = await _currentAccountDocRef();
       if (accRef == null) return false;
-      final col = _txCol(accRef);
+      final col = _txRef(accRef);
       await col.doc(t.id).set(t.toJson(), SetOptions(merge: true));
       return true;
     } catch (e) {
@@ -113,7 +124,7 @@ class FirebaseService {
     try {
       final accRef = await _currentAccountDocRef();
       if (accRef == null) return false;
-      final col = _txCol(accRef);
+      final col = _txRef(accRef);
       final doc = col.doc(id);
       final exists = (await doc.get()).exists;
       if (!exists) {
@@ -155,7 +166,7 @@ class FirebaseService {
       }
       final accRef = query.docs.first.reference;
 
-      final userDoc = await _usersCol(accRef).doc(firebaseUser.uid).get();
+      final userDoc = await _usersRef(accRef).doc(firebaseUser.uid).get();
       if (userDoc.exists) {
         showToast(
           "Bu oturuma zaten bağlısınız.",
@@ -164,7 +175,7 @@ class FirebaseService {
         return false;
       }
 
-      await _usersCol(accRef).doc(firebaseUser.uid).set({
+      await _usersRef(accRef).doc(firebaseUser.uid).set({
         'id': firebaseUser.uid,
         'email': firebaseUser.email,
         'type': 'member',
@@ -199,7 +210,7 @@ class FirebaseService {
         UserType.member => 'member',
       };
 
-      await _usersCol(accRef).doc(userId).update({'type': typeStr});
+      await _usersRef(accRef).doc(userId).update({'type': typeStr});
       return true;
     } catch (e) {
       showToast('Rol güncelleme hatası: $e', AlertType.fail);
@@ -227,12 +238,12 @@ class FirebaseService {
         return false;
       }
 
-      final txSnap = await _txCol(accRef).get();
+      final txSnap = await _txRef(accRef).get();
       for (final d in txSnap.docs) {
         await d.reference.delete();
       }
 
-      final usersSnap = await _usersCol(accRef).get();
+      final usersSnap = await _usersRef(accRef).get();
       for (final d in usersSnap.docs) {
         if (d.id != firebaseUser.uid) {
           await d.reference.delete();
@@ -241,7 +252,7 @@ class FirebaseService {
 
       await accRef.delete();
 
-      final myUserDoc = _usersCol(accRef).doc(firebaseUser.uid);
+      final myUserDoc = _usersRef(accRef).doc(firebaseUser.uid);
       final mySnap = await myUserDoc.get();
       if (mySnap.exists) {
         await myUserDoc.delete();
@@ -269,7 +280,7 @@ class FirebaseService {
         return false;
       }
 
-      final doc = _usersCol(accRef).doc(userId);
+      final doc = _usersRef(accRef).doc(userId);
       final exists = (await doc.get()).exists;
       if (!exists) {
         showToast("Silinecek üye bulunamadı.", AlertType.fail);
@@ -305,7 +316,7 @@ class FirebaseService {
         return false;
       }
 
-      final userRef = _usersCol(accRef).doc(firebaseUser.uid);
+      final userRef = _usersRef(accRef).doc(firebaseUser.uid);
       final userSnap = await userRef.get();
       if (!userSnap.exists) {
         showToast(
@@ -358,7 +369,7 @@ class FirebaseService {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      await _usersCol(docRef).doc(firebaseUser.uid).set({
+      await _usersRef(docRef).doc(firebaseUser.uid).set({
         'id': firebaseUser.uid,
         'email': firebaseUser.email,
         'type': 'owner',
@@ -393,17 +404,17 @@ class FirebaseService {
 
       final accRef = await _currentAccountDocRef();
       if (accRef == null) {
-        showToast(
-          "Hesap oturumu bulunamadı.",
-          AlertType.fail,
-        );
+        // showToast(
+        //   "Hesap oturumu bulunamadı.",
+        //   AlertType.fail,
+        // );
         return null;
       }
 
       final accSnap = await accRef.get();
       final accData = accSnap.data() ?? {};
 
-      final usersSnap = await _usersCol(accRef).get();
+      final usersSnap = await _usersRef(accRef).get();
       final userAccount = usersSnap.docs.map((d) {
         final m = d.data();
         final typeStr = (m['type'] as String?)?.toLowerCase();
@@ -432,7 +443,7 @@ class FirebaseService {
         return null;
       }
 
-      final txSnap = await _txCol(accRef).orderBy('date', descending: true).get();
+      final txSnap = await _txRef(accRef).orderBy('date', descending: true).get();
       final txs = txSnap.docs.map((d) {
         final t = d.data();
         return tx.Transaction(
@@ -507,24 +518,24 @@ class FirebaseService {
     } on firebase.FirebaseAuthException catch (error) {
       if (error.code == 'user-not-found') {
         showToast(
-          'Kullanıcı bulunamadı.',
+          LocaleKeys.user_not_found.tr().capitalizeFirst(),
           AlertType.fail,
         );
       } else if (error.code == 'wrong-password') {
         showToast(
-          'Şifre yanlış.',
+          LocaleKeys.incorrect_password.tr().capitalizeFirst(),
           AlertType.fail,
         );
       } else {
         showToast(
-          'Firebase hatası: ${error.message}',
+          LocaleKeys.incorrect_password.tr().capitalizeFirst(),
           AlertType.fail,
         );
       }
       return null;
     } catch (error) {
       showToast(
-        'Beklenmeyen hata: $error',
+        '${LocaleKeys.unespected_error.tr().capitalizeFirst()} $error',
         AlertType.fail,
       );
       return null;

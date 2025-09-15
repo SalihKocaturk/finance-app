@@ -1,3 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker/core/extensions/string_extensions.dart';
+import 'package:expense_tracker/core/localization/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
@@ -22,9 +25,9 @@ Future<String?> showLogoutBottomSheet(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset('assets/images/reminder.svg'),
-          const Text(
-            "Do You Want To Logout?",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            LocaleKeys.do_you_want_to_logout.tr().capitalizeFirst(),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const Gap(30),
@@ -32,11 +35,10 @@ Future<String?> showLogoutBottomSheet(
           Row(
             children: [
               Expanded(
-                //! burayı widgetlaştırmam lazım
                 child: TextButton(
-                  child: const Text(
-                    "No",
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  child: Text(
+                    LocaleKeys.no.tr().capitalizeFirst(),
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
                   ),
                   onPressed: () => onCancelButtonTap(),
                 ),
@@ -51,7 +53,10 @@ Future<String?> showLogoutBottomSheet(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text("Log out"),
+
+                  child: Text(
+                    LocaleKeys.logout.tr().capitalizeFirst(),
+                  ),
                   onPressed: () => onComfirmButtonTap(),
                 ),
               ),

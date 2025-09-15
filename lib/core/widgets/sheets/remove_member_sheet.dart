@@ -1,4 +1,3 @@
-// features/manage_account/widgets/remove_member_sheet.dart
 import 'package:flutter/material.dart';
 
 import '../../../core/domain/enums/user_type.dart';
@@ -38,7 +37,6 @@ class RemoveMemberSheet extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // üst bilgi
           Row(
             children: [
               CircleAvatar(
@@ -90,7 +88,6 @@ class RemoveMemberSheet extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // uyarı
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(

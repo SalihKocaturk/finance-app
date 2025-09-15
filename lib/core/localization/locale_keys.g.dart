@@ -3,8 +3,10 @@
 // ignore_for_file: constant_identifier_names
 
 abstract class  LocaleKeys {
+  static const no = 'no';
   static const log_in = 'log_in';
   static const email = 'email';
+  static const user_info = 'user_info';
   static const date_of_birth = 'date_of_birth';
   static const password = 'password';
   static const confirm_password = 'confirm_password';
@@ -72,5 +74,21 @@ abstract class  LocaleKeys {
   static const join_account = 'join_account';
   static const invalid_share_code = 'invalid_share_code';
   static const account = 'account';
+  static const do_you_want_to_logout = 'do_you_want_to_logout';
+  static const manage_account = 'manage_account';
+  static const quit_account = 'quit_account';
+  static const account_not_found = 'account_not_found';
+  static const user_not_found = 'user_not_found';
+  static const users = 'users';
+  static const member = 'member';
+  static const members = 'members';
+  static const member_removed = 'member_removed';
+  static const member_cannot_removed = 'member_cannot_removed';
+  static const role_updated = 'role_updated';
+  static const share_invite_code = 'share_invite_code';
+  static const share_code = 'share_code';
+  static const copy = 'copy';
+  static const incorrect_password = 'incorrect_password';
+  static const unespected_error = 'unespected_error';
 
 }
