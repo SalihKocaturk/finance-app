@@ -2,12 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/constants/terms_and_conditions.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
 import 'package:expense_tracker/core/widgets/sheets/log_out_bottom_sheet.dart';
+import 'package:expense_tracker/core/widgets/sheets/model_bottom_sheet.dart';
 import 'package:expense_tracker/core/widgets/sheets/show_paragraph_bottom_sheet.dart';
 import 'package:expense_tracker/features/account_info/pages/account_info.dart';
 import 'package:expense_tracker/features/account_info/providers/user_provider.dart';
 import 'package:expense_tracker/features/app_settings/pages/app_settings_page.dart';
 import 'package:expense_tracker/features/auth/pages/account_page.dart';
 import 'package:expense_tracker/features/auth/providers/auth_provider.dart';
+import 'package:expense_tracker/features/settings/widgets/sheets/owner_quit_account_sheet.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,10 +37,10 @@ class SettingsPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final authNotifier = ref.watch(authProvider.notifier);
     final height = MediaQuery.of(context).size.height;
-    final XFile? imageData = ref.watch(imageFileProvider);
     final name = ref.watch(editNameProvider);
     final email = ref.watch(editEmailProvider);
     final account = ref.watch(accountProvider).value;
+
     if (name == "") {
       ref.read(userProvider.notifier).fillEditors(ref);
     }
@@ -48,7 +50,7 @@ class SettingsPage extends ConsumerWidget {
 
     final currentUser = firebase.FirebaseAuth.instance.currentUser;
 
-    final myUser = account.accounts?.firstWhere(
+    final myUser = account.userAccounts?.firstWhere(
       (u) => u.id == currentUser?.uid,
       orElse: () => const UserAccount(id: null, email: null, type: UserType.member),
     );
@@ -159,33 +161,42 @@ class SettingsPage extends ConsumerWidget {
                 );
               },
             ),
+
           OptionTile(
             title: LocaleKeys.quit_account.tr().capitalizeFirst(),
             icon: Icons.exit_to_app_rounded,
             iconBgColor: const Color(0xFFFB8C00),
             onTap: () {
-              showLogoutBottomSheet(
-                context,
-                () async {
-                  await ref.read(accountProvider.notifier).exitAccount();
+              if (myUser?.type == UserType.owner) {
+                showMyBottomSheet(
+                  context,
+                  MediaQuery.of(context).size.height / 2,
+                  OwnerQuitAccountSheet(ref: ref),
+                );
+              } else {
+                showLogoutBottomSheet(
+                  context,
+                  () async {
+                    await ref.read(accountProvider.notifier).exitAccount();
 
-                  ref.invalidate(transactionListProvider);
-                  ref.invalidate(balanceProvider);
+                    ref.invalidate(transactionListProvider);
+                    ref.invalidate(balanceProvider);
 
-                  if (context.mounted) {
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (_) => const AccountPage(),
+                        ),
+                      );
+                    }
+                  },
+                  () {
                     Navigator.pop(context);
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (_) => const AccountPage(),
-                      ),
-                    );
-                  }
-                },
-                () {
-                  Navigator.pop(context);
-                },
-                height * 0.4,
-              );
+                  },
+                  height * 0.4,
+                );
+              }
             },
           ),
           OptionTile(

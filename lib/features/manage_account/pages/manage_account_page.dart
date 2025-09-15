@@ -63,7 +63,7 @@ class ManageAccountPage extends ConsumerWidget {
                       child: ActionCard(
                         title: LocaleKeys.member.tr().capitalizeFirst(),
                         bg: const Color(0xFF7E57C2),
-                        count: account.accounts?.length ?? 0,
+                        count: account.userAccounts?.length ?? 0,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -140,7 +140,7 @@ class ManageAccountPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 ...List<Widget>.from(
-                  (account.accounts ?? <UserAccount>[]).map((user) {
+                  (account.userAccounts ?? <UserAccount>[]).map((user) {
                     final isMe = user.id == currentUid;
                     return UserRow(
                       user: user,
@@ -180,7 +180,7 @@ class ManageAccountPage extends ConsumerWidget {
 
                 const SizedBox(height: 24),
 
-                if ((account.accounts ?? []).any((x) => x.id == currentUid && x.type == UserType.owner))
+                if ((account.userAccounts ?? []).any((x) => x.id == currentUid && x.type == UserType.owner))
                   CustomButton(
                     color: const Color(0xFFE53935),
                     icon: Icons.delete_forever_rounded,

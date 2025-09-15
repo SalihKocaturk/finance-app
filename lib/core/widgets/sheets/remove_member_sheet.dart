@@ -91,7 +91,7 @@ class RemoveMemberSheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(.06),
+              color: Colors.red.withAlpha(60),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(

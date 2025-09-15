@@ -34,11 +34,11 @@ class AccountNotifier extends AsyncNotifier<Account?> {
 
     final cur = state.value;
     if (cur != null) {
-      final updatedUsers = (cur.accounts ?? const <UserAccount>[]).where((u) => u.id != userId).toList();
+      final updatedUsers = (cur.userAccounts ?? const <UserAccount>[]).where((u) => u.id != userId).toList();
 
       final updated = Account(
         id: cur.id,
-        accounts: updatedUsers,
+        userAccounts: updatedUsers,
         transactions: cur.transactions,
         shareId: cur.shareId,
       );
@@ -96,13 +96,13 @@ class AccountNotifier extends AsyncNotifier<Account?> {
     final current = state.value;
     if (current == null) return false;
 
-    final updatedAccounts = (current.accounts ?? [])
+    final updatedAccounts = (current.userAccounts ?? [])
         .map((u) => u.id == userId ? UserAccount(id: u.id, email: u.email, type: newType) : u)
         .toList();
 
     final optimistic = Account(
       id: current.id,
-      accounts: updatedAccounts,
+      userAccounts: updatedAccounts,
       transactions: current.transactions,
       shareId: current.shareId,
     );

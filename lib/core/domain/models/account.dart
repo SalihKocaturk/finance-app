@@ -8,13 +8,13 @@ import 'transaction.dart';
 
 class Account extends Equatable {
   final String? id;
-  final List<UserAccount>? accounts;
+  final List<UserAccount>? userAccounts;
   final List<Transaction>? transactions;
   final int shareId;
 
   Account({
     this.id,
-    this.accounts,
+    this.userAccounts,
     this.transactions,
     int? shareId,
   }) : shareId = shareId ?? Random().nextInt(1000000);
@@ -34,7 +34,7 @@ class Account extends Equatable {
   @override
   List<Object?> get props => [
     id,
-    accounts,
+    userAccounts,
     transactions,
     shareId,
   ];

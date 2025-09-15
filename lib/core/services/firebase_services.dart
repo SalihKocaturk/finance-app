@@ -354,7 +354,7 @@ class FirebaseService {
       }
 
       final account = Account(
-        accounts: [
+        userAccounts: [
           UserAccount(
             id: firebaseUser.uid,
             email: firebaseUser.email,
@@ -378,7 +378,7 @@ class FirebaseService {
 
       return Account(
         id: docRef.id,
-        accounts: account.accounts,
+        userAccounts: account.userAccounts,
         transactions: account.transactions,
         shareId: account.shareId,
       );
@@ -461,7 +461,7 @@ class FirebaseService {
 
       return Account(
         id: accRef.id,
-        accounts: userAccount,
+        userAccounts: userAccount,
         transactions: txs,
         shareId: (accData['shareId'] as num?)?.toInt(),
       );

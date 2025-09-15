@@ -17,7 +17,6 @@ class WeeklyTransactionsChart extends StatelessWidget {
 
   static const incomeColor = Colors.green;
   static const expenseColor = Color(0xFFE74C3C);
-
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();

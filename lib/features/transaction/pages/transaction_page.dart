@@ -33,7 +33,7 @@ class TransactionPage extends ConsumerWidget {
     final transactionListNotifier = ref.read(transactionListProvider.notifier);
     final account = ref.watch(accountProvider).valueOrNull;
     final currentUid = firebase.FirebaseAuth.instance.currentUser?.uid;
-    final me = account?.accounts?.firstWhere(
+    final me = account?.userAccounts?.firstWhere(
       (u) => u.id == currentUid,
       orElse: () => const UserAccount(type: UserType.member),
     );
