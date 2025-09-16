@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/services/firebase_services.dart';
+import 'package:expense_tracker/core/services/notification_services.dart';
 import 'package:expense_tracker/core/storage/user_storage.dart';
 import 'package:expense_tracker/features/account_info/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +34,7 @@ class AuthNotifier extends Notifier<User> {
       await userStorage.setLoggedIn(true);
       ref.invalidate(hasUserProvider);
       ref.invalidate(hasAccountProvider);
+      await PushNotificationService.pushNotificationService.registerTokenIfSignedIn();
 
       try {
         await ref.read(accountProvider.notifier).getAccountSession();
@@ -55,6 +57,7 @@ class AuthNotifier extends Notifier<User> {
       state = user;
       await userStorage.setLoggedIn(true);
       ref.invalidate(hasUserProvider);
+      await PushNotificationService.pushNotificationService.registerTokenIfSignedIn();
     } else {
       showToast(
         "Kayıt başarısız.",

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/extensions/string_extensions.dart';
@@ -68,15 +70,47 @@ class FirebaseService {
       final accRef = await _currentAccountDocRef();
       if (accRef == null) return false;
       final col = _txRef(accRef);
-      await col.doc(t.id).set(t.toJson(), SetOptions(merge: false));
+
+      final uid = _auth.currentUser?.uid;
+      final json = t.toJson();
+      if (uid != null) json['createdBy'] = uid;
+
+      await col.doc(t.id).set(json, SetOptions(merge: false));
       return true;
     } catch (e) {
-      showToast(
-        'İşlem ekleme hatası: $e',
-        AlertType.fail,
-      );
+      showToast('İşlem ekleme hatası: $e', AlertType.fail);
       return false;
     }
+  }
+
+  DateTime parseDateAndroidOnly(dynamic date) {
+    if (!Platform.isAndroid) {
+      if (date is String) {
+        final parsedDate = DateTime.tryParse(date);
+        if (parsedDate != null) return parsedDate;
+        showToast(
+          'iOS: date is not a valid ISO string: $date',
+          AlertType.fail,
+        );
+        throw StateError('iOS: date is not a valid ISO string: $date');
+      }
+
+      throw StateError('iOS: unexpected date type: $date (${date.runtimeType})');
+    }
+
+    if (date is Timestamp) return date.toDate();
+    if (date is String) {
+      final parsedDate = DateTime.tryParse(date);
+      if (parsedDate != null) return parsedDate;
+      final ms = int.tryParse(date);
+      if (ms != null) return DateTime.fromMillisecondsSinceEpoch(ms);
+    }
+    if (date is int) return DateTime.fromMillisecondsSinceEpoch(date);
+    showToast(
+      'iOS: date is not a valid ISO string: $date',
+      AlertType.fail,
+    );
+    throw StateError('Android: unsupported date format: $date (${date.runtimeType})');
   }
 
   Future<bool> updateTransaction(tx.Transaction t) async {
@@ -404,10 +438,10 @@ class FirebaseService {
 
       final accRef = await _currentAccountDocRef();
       if (accRef == null) {
-        // showToast(
-        //   "Hesap oturumu bulunamadı.",
-        //   AlertType.fail,
-        // );
+        showToast(
+          "Hesap oturumu bulunamadı.",
+          AlertType.fail,
+        );
         return null;
       }
 
@@ -450,7 +484,7 @@ class FirebaseService {
           id: t['id'] as String? ?? d.id,
           category: TransactionCategory.fromJson(t['category'] as Map<String, dynamic>),
           amount: (t['amount'] as num).toDouble(),
-          date: DateTime.parse(t['date'] as String),
+          date: parseDateAndroidOnly(t['date']),
           details: t['details'] as String? ?? '',
           transactionCurrency: CurrencyType.values.firstWhere(
             (c) => c.toString() == t['transactionCurrency'],
