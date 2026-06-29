@@ -60,28 +60,28 @@ In short, this is a **Firebase-backed, cross-platform Flutter expense tracker** 
 ## Screenshots
 
 ### Home — Balance overview
-![Home screen](Screenshot_20260629_154933.jpg)
+![Home screen](app_photos/Screenshot_20260629_154933.jpg)
 
 ### Home — Currency selector (TRY / USD / EUR)
-![Currency selector](Screenshot_20260629_154942.jpg)
+![Currency selector](app_photos/Screenshot_20260629_154942.jpg)
 
 ### Transactions — Add income / Add expense
-![Transactions tab](Screenshot_20260629_155000.jpg)
+![Transactions tab](app_photos/Screenshot_20260629_155000.jpg)
 
 ### Statistics — Income/Expense chart & category breakdown
-![Statistics tab](Screenshot_20260629_155038.jpg)
+![Statistics tab](app_photos/Screenshot_20260629_155038.jpg)
 
 ### Profile
-![Profile screen](Screenshot_20260629_155044.jpg)
+![Profile screen](app_photos/Screenshot_20260629_155044.jpg)
 
 ### Settings — Dark theme & language
-![Settings screen](Screenshot_20260629_155051.jpg)
+![Settings screen](app_photos/Screenshot_20260629_155051.jpg)
 
 ### Manage account — Shared account & invite code
-![Manage account screen](Screenshot_20260629_155121.jpg)
+![Manage account screen](app_photos/Screenshot_20260629_155121.jpg)
 
 ### Profile — Logout confirmation
-![Logout confirmation](Screenshot_20260629_155218.jpg)
+![Logout confirmation](app_photos/Screenshot_20260629_155218.jpg)
 
 ### Login screen
-![Login screen](Screenshot_20260629_155347.jpg)
+![Login screen](app_photos/Screenshot_20260629_155347.jpg)
